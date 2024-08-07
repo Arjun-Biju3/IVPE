@@ -1,12 +1,20 @@
 {% load static %}
 <nav>
-    <img src="{% static 'images/zero.png' %}" alt="ivpe">
+    <img class="home" src="{% static 'images/zero.png' %}" alt="ivpe">
     <div class="pos">
     <ul>
-        <li><a href="#main">HOME</a></li>
-        <li><a href="#iphone">HELP</a></li>
-        <li><a href="#iphone">REGISTER</a></li>
-        <li><a href="#iphone">LOGIN</a></li>
+        <li><a href="{% url 'home' %}">HOME</a></li>
+        <li><a href="{% url 'candidates' %}">CANDIDATES</a></li>
+        <li><a href="{% url 'vote' %}">VOTE</a></li>
+        <li><a href="{% url 'help' %}">HELP</a></li>
+        <li><a href="{% url 'register' %}">REGISTER</a></li>
+        {% if not user.is_authenticated %}
+        <li><a href="{% url 'login' %}">LOGIN</a></li>
+        {% endif %}
+        {% if  user.is_authenticated %}
+        <li><a href="logout">LOGOUT</a></li>
+        {% endif %}
+        
     </ul>
 </div>
 </nav>

@@ -1,3 +1,4 @@
 from django.contrib import admin
+from Voter.models import VoterList
 
-# Register your models here.
+admin.site.register(VoterList)
