@@ -10,19 +10,21 @@
     <link rel="stylesheet" href="{% static 'css/reg.css' %}">
 </head>
 <body>
-    <div id="div1" class="register">
+    
+    <div id="div2" class="register1">
         <div class="color">
             <span class="reg">REGISTER</span>
         </div>
-        <div class="in">
-            <form action="" method="post" id="form1">
+        <div class="in1">
+            <form action="" method="post" id="form2">
                 {% csrf_token %}
-                <input type="text" name="adhar" placeholder="Adhar Number">
-                <button  type="submit"><span style="color: white;">SEND OTP</span></button>
+                <input type="text" name="adhar" placeholder="Enter OTP">
+                <button class="button" type="submit"><span style="color: white;">SUBMIT</span></button>
+                <button id="bt1" type="submit"><span style="color: white;">RESEND</span></button>
             </form>
         </div>
     </div>
-     
+
 </body>
 </html>
 {% endblock content %}

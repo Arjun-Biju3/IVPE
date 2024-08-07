@@ -1,9 +1,19 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
+from Voter.models import VoterList
 
 def home(request):
     return render(request,'index.html')
 
+def otp_page(request):
+    if request.POST:
+        pass
+    return render(request,'otp_page.html')
+
 def register(request):
+    if request.POST:
+        adhar=request.POST.get('adhar')
+        print(adhar)
+        return redirect('validate')
     return render(request,'register.html')
 
 def login(request):

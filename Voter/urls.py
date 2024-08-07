@@ -8,5 +8,6 @@ urlpatterns = [
     path('logout',views.logout,name='logout'),
     path('vote',views.vote,name='vote'),
     path('candidates',views.candidates,name='candidates'),
-    path('help',views.help,name='help')
+    path('help',views.help,name='help'),
+    path('validate',views.otp_page,name='validate')
 ]
