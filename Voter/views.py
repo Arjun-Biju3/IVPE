@@ -1,5 +1,9 @@
 from django.shortcuts import render,redirect
 from Voter.models import VoterList
+from Voter.calculations import *
+from Voter.otp import *
+
+api_key="427520ApBUXZ2TfOk66b4d03dP1"
 
 def home(request):
     return render(request,'index.html')
@@ -12,7 +16,13 @@ def otp_page(request):
 def register(request):
     if request.POST:
         adhar=request.POST.get('adhar')
-        print(adhar)
+        user=VoterList.objects.get(adharNo=adhar)
+        age=calculate_age(user.dob)
+        if user.eligibility_status ==1 and user.register_status==0 and age >= 18:
+            phone=user.phone
+            otp=generate_otp()
+            
+      
         return redirect('validate')
     return render(request,'register.html')
 
