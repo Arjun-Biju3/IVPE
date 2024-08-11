@@ -3,7 +3,6 @@ from Voter.models import VoterList
 from Voter.calculations import *
 from Voter.otp import *
 
-api_key="427520ApBUXZ2TfOk66b4d03dP1"
 
 def home(request):
     return render(request,'index.html')
@@ -19,10 +18,11 @@ def register(request):
         user=VoterList.objects.get(adharNo=adhar)
         age=calculate_age(user.dob)
         if user.eligibility_status ==1 and user.register_status==0 and age >= 18:
-            phone=user.phone
+            email=user.email
+            print(email)
             otp=generate_otp()
+            send_email(email,otp)
             
-      
         return redirect('validate')
     return render(request,'register.html')
 
