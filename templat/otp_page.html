@@ -18,9 +18,9 @@
         <div class="in1">
             <form action="" method="post" id="form2">
                 {% csrf_token %}
-                <input type="text" name="adhar" placeholder="Enter OTP" required>
+                <input type="text" name="otp" placeholder="Enter OTP">
                 <button class="button" type="submit"><span style="color: white;">SUBMIT</span></button>
-                <button id="bt1" type="submit"><span style="color: white;">RESEND</span></button>
+               <button id="bt1" name="resend" type="submit"><span style="color: white;">RESEND</span></button>
             </form>
         </div>
     </div>

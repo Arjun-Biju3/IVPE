@@ -1,0 +1,105 @@
+{% extends 'blank_layout.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .det
+        {
+            position: relative;
+            margin-top: 150px;
+            margin-left: 100px;
+            width: 600px;
+            border: 1px solid black;
+            gap:50px;
+            padding: 40px;
+            padding-top: 100px;
+            border-radius: 20px;
+            overflow: hidden;
+           
+        }
+        .s
+        {
+            display: flex;
+            flex-direction: row;
+            gap:150px;
+        }
+        .s1
+        {
+            display: flex;
+            flex-direction: row;
+            gap:180px;
+        }
+        .s2
+        {
+            display: flex;
+            flex-direction: row;
+            gap:140px;
+        }
+        .s3
+        {
+            display: flex;
+            flex-direction: row;
+            gap:156px;
+        }
+        .one
+        {
+            display: flex;
+            flex-direction: row;
+            gap: 50px;
+        }.black
+        {
+            width: 700px;
+            height: 80px;
+            background-color: black;
+            position: absolute;
+            top: 0%;
+            left: -1%;
+           
+        }
+        button
+        {
+            position: absolute;
+            left: 30%;
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="det">
+        <div class="black" ></div>
+        <form action="" method="post">
+            <div class="s"> <span>First Name</span><span>Last Name</span></div>
+             <br>
+            <div class="one"> <input type="text" name="fname" value="{{ user.fname}}" readonly>
+                <input type="text" name="lname" value="{{ user.lname}}" readonly></div>
+             <br>
+             <div class="s1"> <span>Phone</span><span>Email</span></div>
+             <br>
+             <div class="one"><input type="text" name="phone" value="{{ user.phone }}" readonly>
+                <input type="text" name="email" value="{{ user.email }}" readonly></div>
+             <br>
+             <div class="s2"> <span>Constituency</span><span>State</span></div>
+             <br>
+             <div class="one">
+                <input type="text" name="fname" value="{{ user.constituency }}" readonly>
+             <input type="text" name="state" value="{{ user.state }}" id="" readonly>
+             </div>
+             <br>
+             <div class="s3"> <span>Username</span><span>Password</span></div>
+             <br>
+             <div class="one">
+                <input type="text" name="fname" value="{{ user.adharNo }}" readonly>
+             <input type="password" name="password" id="" required>
+             </div>
+             <br>
+            <button type="submit">SUBMIT</button>
+         </form>
+       
+    </div>
+</body>
+</html>
+{% endblock content %}

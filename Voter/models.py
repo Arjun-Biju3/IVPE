@@ -8,7 +8,7 @@ class VoterList(models.Model):
     NO=0
     registered=((YES,'yes'),(NO,'no'))
     eligibility=((YES,'yes'),(NO,'no'))
-    adharNo=models.CharField(max_length=12,null=False)
+    adharNo=models.CharField(max_length=12,null=False,primary_key=True)
     fname=models.CharField(max_length=20)
     lname=models.CharField(max_length=20)
     dob=models.DateField()

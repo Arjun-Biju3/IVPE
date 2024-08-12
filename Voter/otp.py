@@ -1,8 +1,9 @@
-import requests
 import random
 import http.client
 import smtplib
 from email.message import EmailMessage
+from datetime import datetime,timedelta
+from django.http import HttpResponse
 
 def generate_otp(length=6):
     otp = ''.join([str(random.randint(0, 9)) for _ in range(length)])
@@ -38,14 +39,12 @@ def generate_otp(length=6):
         print(f"Message failed with error: {responseData['messages'][0]['error-text']}")''' 
 
 def send_email(to,otp):
+    msg=EmailMessage()
     subject="Register"
     body=f"Your otp for IVPE registration is {otp}.Please do not share it with any one"
-    msg=EmailMessage()
     msg.set_content(body)
     msg['subject'] = subject
     msg['to'] = to
-
-    
     user="ivpe68030@gmail.com"
     msg['from']=user
     password="utba gpfp sfgt lagn"
@@ -56,6 +55,26 @@ def send_email(to,otp):
     server.send_message(msg)
     server.quit()
      
-     
 
-    
+def validate_otp(request,otp):
+    print(otp)
+    session_otp = request.session.get('otp')
+    otp_expires_str = request.session.get('otp_expires')
+    if session_otp and otp_expires_str:
+        otp_expires = datetime.fromisoformat(otp_expires_str)
+        if str(session_otp) == otp:
+            return 1
+        elif str(session_otp) == otp and datetime.now() > otp_expires:
+            return -1
+        elif str(session_otp) != otp:
+            return 0
+        else:
+            return 0
+    return None
+
+def clear_otp(request):
+    if 'otp' in request.session:
+        del request.session['otp']
+        del request.session['otp_expires']
+    return HttpResponse("OTP cleared")
+
