@@ -3,12 +3,15 @@ from Voter.models import VoterList
 from Voter.calculations import *
 from Voter.otp import *
 from datetime import datetime,timedelta
+from django.contrib import messages
 
 
 def home(request):
     return render(request,'index.html')
 
 def otp_page(request):
+    success_message="OTP has been send succesfully"
+    messages.success(request,success_message)
     if request.POST:
         otp=request.POST.get('otp')
         res=validate_otp(request,otp)
@@ -18,9 +21,11 @@ def otp_page(request):
             adhar=request.session.get('adhar')
             return redirect('details',id=adhar)
         if res==-1:
-            print("Expired")
+            error_message="OTP Expired"
+            messages.error(request,error_message)
         if res==0:
-            print("Invalid")
+            error_message="Invalid OTP"
+            messages.error(request,error_message)
         
     if request.POST and 'resend' in request.POST:
         otp=generate_otp()
@@ -47,7 +52,8 @@ def register(request):
                 print(otp)
             return redirect('validate')
         else:
-            print("no user exists")
+            error_message="Enter a valid Adhar number"
+            messages.error(request,error_message)
     return render(request,'register.html')
 
 def details(request,id):
