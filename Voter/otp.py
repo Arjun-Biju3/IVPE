@@ -9,35 +9,6 @@ def generate_otp(length=6):
     otp = ''.join([str(random.randint(0, 9)) for _ in range(length)])
     return otp
 
-'''def send_otp(phone,otp):
-    conn = http.client.HTTPSConnection("api.msg91.com")
-    authkey="427520ApBUXZ2TfOk66b4d03dP1"
-    headers = { 'Content-Type': "application/JSON" }
-    message = "your otp is " + otp
-    encoded_message = urllib.parse.quote(message)  
-    urls = "http://control.msg91.com/api/sendotp.php?otp="+otp+"&message="+"Your otp is "+otp +"&mobile="+phone+"&authkey="+authkey+"&country=91"
-    conn.request("GET", urls, headers=headers)
-    res = conn.getresponse()
-    data = res.read()
-    print(data.decode("utf-8"))
-    return None'''
-    
-
-'''def send_otp(phone,otp):
-    client = vonage.Client(key="7bbb08c8", secret="Xzn3goWYiPSidXVw")
-    responseData = client.sms.send_message(
-    {
-        "from": 'IVPE',
-        "to":918594034332,
-        "text": "A text message sent using the Vonage SMS API",
-    }
-    )
-
-    if responseData["messages"][0]["status"] == "0":
-        print("Message sent successfully.")
-    else:
-        print(f"Message failed with error: {responseData['messages'][0]['error-text']}")''' 
-
 def send_email(to,otp):
     msg=EmailMessage()
     subject="Register"
@@ -56,21 +27,22 @@ def send_email(to,otp):
     server.quit()
      
 
-def validate_otp(request,otp):
-    print(otp)
+def validate_otp(request, otp):
     session_otp = request.session.get('otp')
     otp_expires_str = request.session.get('otp_expires')
+    
     if session_otp and otp_expires_str:
         otp_expires = datetime.fromisoformat(otp_expires_str)
+        
+        if datetime.now() > otp_expires:
+            return -1
+    
         if str(session_otp) == otp:
             return 1
-        elif str(session_otp) == otp and datetime.now() > otp_expires:
-            return -1
-        elif str(session_otp) != otp:
-            return 0
         else:
             return 0
     return None
+
 
 def clear_otp(request):
     if 'otp' in request.session:

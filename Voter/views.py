@@ -33,18 +33,21 @@ def otp_page(request):
 def register(request):
     if request.POST:
         adhar=request.POST.get('adhar')
-        user=VoterList.objects.get(adharNo=adhar)
-        age=calculate_age(user.dob)
-        if user.eligibility_status ==1 and user.register_status==0 and age >= 18:
-            email=user.email
-            otp=generate_otp()
-            request.session['adhar']=adhar
-            request.session['email']=email
-            request.session['otp']=otp
-            request.session['otp_expires'] = (datetime.now() + timedelta(minutes=5)).isoformat()
-            send_email(email,otp)
-            print(otp)
-        return redirect('validate')
+        user=VoterList.objects.filter(adharNo=adhar).first()
+        if user is not None:
+            age=calculate_age(user.dob)
+            if user.eligibility_status ==1 and user.register_status==0 and age >= 18:
+                email=user.email
+                otp=generate_otp()
+                request.session['adhar']=adhar
+                request.session['email']=email
+                request.session['otp']=otp
+                request.session['otp_expires'] = (datetime.now() + timedelta(minutes=5)).isoformat()
+                send_email(email,otp)
+                print(otp)
+            return redirect('validate')
+        else:
+            print("no user exists")
     return render(request,'register.html')
 
 def details(request,id):

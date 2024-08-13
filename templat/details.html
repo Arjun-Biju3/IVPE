@@ -1,5 +1,6 @@
 {% extends 'blank_layout.html' %}
 {% block content %}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,14 +13,14 @@
             position: relative;
             margin-top: 150px;
             margin-left: 100px;
-            width: 600px;
+            width: 700px;
             border: 1px solid black;
             gap:50px;
             padding: 40px;
             padding-top: 100px;
             border-radius: 20px;
             overflow: hidden;
-           
+            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
         }
         .s
         {
@@ -52,7 +53,7 @@
             gap: 50px;
         }.black
         {
-            width: 700px;
+            width: 800px;
             height: 80px;
             background-color: black;
             position: absolute;
@@ -63,14 +64,56 @@
         button
         {
             position: absolute;
-            left: 30%;
+            left: 20%;
+            border: none;
+            border-radius: 15px;
+            background-color: black;
+            width: 200px;
+            height: 30px;
         }
+ 
+        button:hover
+        {
+        transform: scale(1.01);
+
+        }
+        input
+        {
+            height: 25px;
+        
+            
+        }
+       input:hover
+       {
+        border-color: black;
+       }
+       .lab
+       {
+        color: white;
+        position: absolute;
+        top: 40%;
+        left: 75%;
+        
+       }
+       .pic
+       {
+        width: 300px;
+        height: 350px;
+        background-image: url('{% static "images/lab.jpg" %}');
+        background-size: cover; 
+        background-position: center; 
+        background-repeat: no-repeat; 
+        position: absolute;
+        top: 40%;
+        left: 45%;
+       }
     </style>
 </head>
 <body>
     
     <div class="det">
-        <div class="black" ></div>
+        <div class="black" ><span class="lab">REGISTER</span></div>
+        <br>
         <form action="" method="post">
             <div class="s"> <span>First Name</span><span>Last Name</span></div>
              <br>
@@ -95,11 +138,15 @@
                 <input type="text" name="fname" value="{{ user.adharNo }}" readonly>
              <input type="password" name="password" id="" required>
              </div>
-             <br>
-            <button type="submit">SUBMIT</button>
+             <br><br>
+            <button type="submit"><span style="color: white;">SUBMIT</span></button>
+            <br>
          </form>
-       
     </div>
+    <div class="pic">
+       
+       </div>
 </body>
 </html>
+<br><br><br>
 {% endblock content %}
