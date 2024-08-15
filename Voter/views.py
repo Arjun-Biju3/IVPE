@@ -2,9 +2,27 @@ from django.shortcuts import render,redirect
 from Voter.models import VoterList
 from Voter.calculations import *
 from Voter.otp import *
+import datetime
 from datetime import datetime,timedelta
 from django.contrib import messages
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import cv2
+import numpy as np
+import base64
+import os
+from PIL import Image
+from io import BytesIO
+from django.conf import settings
+import subprocess
 
+
+
+db_dir = os.path.join(settings.BASE_DIR, 'db')
+log_path = os.path.join(settings.BASE_DIR, 'log.txt')
+
+if not os.path.exists(db_dir):
+    os.mkdir(db_dir)
 
 def home(request):
     return render(request,'index.html')
@@ -57,6 +75,13 @@ def register(request):
     return render(request,'register.html')
 
 def details(request,id):
+    if request.POST:
+        username=request.POST.get('username')
+        image_data = request.POST.get('image')
+        image = decode_image(image_data)
+        filename = os.path.join(db_dir, f'{username}.jpg')
+        cv2.imwrite(filename, image)
+
     user=VoterList.objects.get(adharNo=id)
     context={'user':user}
     return render(request,'details.html',context)
@@ -75,3 +100,9 @@ def vote(request):
 
 def help(request):
     return render(request,'help.html')
+
+def decode_image(image_data):
+    image_data = image_data.split(',')[1]
+    image = Image.open(BytesIO(base64.b64decode(image_data)))
+    image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
+    return image

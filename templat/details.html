@@ -7,20 +7,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+
     <style>
         .det
         {
-            position: relative;
             margin-top: 150px;
-            margin-left: 100px;
+            margin-left: 50px;
             width: 700px;
             border: 1px solid black;
             gap:50px;
             padding: 40px;
-            padding-top: 100px;
+            padding-top: 30px;
             border-radius: 20px;
             overflow: hidden;
             box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+            
         }
         .s
         {
@@ -53,15 +54,17 @@
             gap: 50px;
         }.black
         {
-            width: 800px;
+            display: none;
+            width: 781px;
             height: 80px;
             background-color: black;
             position: absolute;
-            top: 0%;
-            left: -1%;
+            top: 23.9%;
+            left: 4%;
+            border-radius: 20px;
            
         }
-        button
+        .nbt
         {
             position: absolute;
             left: 20%;
@@ -72,7 +75,7 @@
             height: 30px;
         }
  
-        button:hover
+        .nbt:hover
         {
         transform: scale(1.01);
 
@@ -105,7 +108,21 @@
         background-repeat: no-repeat; 
         position: absolute;
         top: 40%;
-        left: 45%;
+        left: 40%;
+       }
+       .ved
+       {
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        top: 20%;
+        left: 73%;
+       }
+       #webcam
+       {
+        position: fixed;
+        width: 300px;
+        height: 300px;
        }
     </style>
 </head>
@@ -114,7 +131,8 @@
     <div class="det">
         <div class="black" ><span class="lab">REGISTER</span></div>
         <br>
-        <form action="" method="post">
+        <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
             <div class="s"> <span>First Name</span><span>Last Name</span></div>
              <br>
             <div class="one"> <input type="text" name="fname" value="{{ user.fname}}" readonly>
@@ -135,17 +153,22 @@
              <div class="s3"> <span>Username</span><span>Password</span></div>
              <br>
              <div class="one">
-                <input type="text" name="fname" value="{{ user.adharNo }}" readonly>
+                <input type="text" name="username" value="{{ user.adharNo }}" readonly>
              <input type="password" name="password" id="" required>
              </div>
              <br><br>
-            <button type="submit"><span style="color: white;">SUBMIT</span></button>
+             <div class="ved">
+                <video id="webcam" autoplay></video>
+                <input type="hidden" name="image" id="image_data">
+            </div>
+            <button id="capture" class="nbt" type="submit"><span style="color: white;">SUBMIT</span></button>
             <br>
          </form>
     </div>
     <div class="pic">
        
        </div>
+       <script src="{% static 'js/webcam.js' %}"></script>
 </body>
 </html>
 <br><br><br>

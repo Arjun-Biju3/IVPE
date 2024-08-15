@@ -1,12 +1,7 @@
 {% extends 'blank_layout.html' %}
 {% block content %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+
     <link rel="stylesheet" href="{% static 'css/reg.css' %}">
     <style>
         .success
@@ -43,17 +38,17 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
         }
     </style>
-</head>
-<body>
-    <div class="{{ message.tags }}">
+
+    <div id="message-container">
         <center>
             {% if messages %}
-            {% for message in messages %}
-             <p class="{{ message.tags }}">{{ message }}</p>
-             {% endfor %}
-        {% endif %}
+                {% for message in messages %}
+                    <p class="{{message.tags}}">{{ message }}</p>
+                {% endfor %}
+            {% endif %}
         </center>
     </div>
+
     <div id="div2" class="register1">
         <div class="color">
             <span class="reg">REGISTER</span>
@@ -68,6 +63,23 @@
         </div>
     </div>
 
-</body>
-</html>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const messageContainer = document.getElementById('message-container');
+            
+            if (messageContainer) {
+                setTimeout(function() {
+                    const messages = messageContainer.querySelectorAll('p');
+                    messages.forEach(function(message) {
+                        message.style.transition = 'opacity 1s ease';
+                        message.style.opacity = '0';
+                        message.style.display='none'
+                       // 1000ms = 1 second fade-out duration
+                    });
+                }, 3000);  // 5000ms = 5 seconds before fading out
+            }
+        });
+    </script>
+    
+
 {% endblock content %}
