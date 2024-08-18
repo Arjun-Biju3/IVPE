@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from Voter.models import VoterList,Profile,LoginKey
+from Voter.models import VoterList,Profile,LoginKey,VoteKey
 from Voter.calculations import *
 from Voter.otp import *
 import datetime
@@ -106,9 +106,17 @@ def details(request,id):
         cv2.imwrite(filename, image)
         #generate login key and send
         log_key=generate_log_key(username,name)
-        send_log_key(email,log_key)
         key,salt=hash_key_with_salt(log_key)
         LoginKey.objects.create(user=username,key=key,salt=salt)
+        #generrate vote key and store
+        uid=generate_log_id(username,name)
+        Okey=generate_vote_key(username,name)
+        vkey=add_string_with_random_separator(uid,Okey)
+        # Generating a random key for AES-128
+        key = os.urandom(16)  # Securely generated key
+        Enc_key=encrypt_aes(vkey,key)
+        VoteKey.objects.create(uid=uid,key=Enc_key)
+        send_log_key(email,log_key)
         return redirect('home')
     user=VoterList.objects.get(adharNo=id)
     context={'user':user}

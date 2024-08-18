@@ -47,4 +47,9 @@ class LoginKey(models.Model):
     key=models.TextField(max_length=70)
     salt=models.TextField(max_length=40)
     
+class VoteKey(models.Model):
+    uid=models.CharField(max_length=10)
+    key=models.TextField()
+    
+    
     

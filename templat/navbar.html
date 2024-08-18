@@ -5,7 +5,9 @@
     <ul>
         <li><a href="{% url 'home' %}">HOME</a></li>
         <li><a href="{% url 'candidates' %}">CANDIDATES</a></li>
+        {% if  user.is_authenticated %}
         <li><a href="{% url 'vote' %}">VOTE</a></li>
+        {% endif %}
         <li><a href="{% url 'help' %}">HELP</a></li>
         <li><a href="{% url 'register' %}">REGISTER</a></li>
         {% if not user.is_authenticated %}
