@@ -18,6 +18,7 @@ import numpy as np
 from django.contrib.auth.models import User
 from Voter.key import *
 from Voter.encrypt import *
+from django.contrib.auth import authenticate,login,logout
 
 
 #folder to upload captured image
@@ -122,11 +123,21 @@ def details(request,id):
     context={'user':user}
     return render(request,'details.html',context)
 
-def login(request):
+def user_login(request):
+    if request.POST:
+        username=request.POST.get('username')
+        password=request.POST.get('password')
+        user=authenticate(username=username,password=password)
+        if user:
+            login(request,user)
+            return redirect('home')
+        else:
+            messages.error(request,'invalid user credentials')
     return render(request,'login.html')
 
 def logout(request):
-    return render(request,'index.html')
+    logout(request)
+    return redirect('home')
 
 def candidates(request):
     return render(request,'candidates.html')

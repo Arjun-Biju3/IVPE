@@ -1,15 +1,65 @@
 {% extends 'blank_layout.html' %}
 {% block content %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <br><br><br><br>
-    vote
-</body>
-</html>
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
+<style>
+    .error {    
+        position: absolute;
+        top: 20%;
+        left: 38%;
+        width: 280px;
+        background-color: #f8d7da; 
+        color: #721c24; 
+        border: 1px solid #f5c6cb; 
+        padding: 15px;
+        border-radius: 5px; 
+        font-family: Arial, sans-serif;
+        font-size: 14px; 
+        margin: 10px 0; 
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+    }
+</style>
+
+<div id="message-container">
+    <center>
+        {% if messages %}
+            {% for message in messages %}
+                <p class="{{message.tags}}">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+    </center>
+</div>
+
+<div id="div1" class="register">
+    <div class="color">
+        <span class="reg">LOGIN</span>
+    </div>
+    <div class="in">
+        <form action="" method="post" id="form1">
+            {% csrf_token %}
+            <input type="text" name="username" placeholder="Username" required>
+            <br><br><br>
+            <input type="password" name="password" placeholder="Password" required>
+            <button type="submit"><span style="color: white;">LOGIN</span></button>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const messageContainer = document.getElementById('message-container');
+        
+        if (messageContainer) {
+            setTimeout(function() {
+                const messages = messageContainer.querySelectorAll('p');
+                messages.forEach(function(message) {
+                    message.style.transition = 'opacity 1s ease';
+                    message.style.opacity = '0';
+                   // 1000ms = 1 second fade-out duration
+                });
+            }, 3000);  // 5000ms = 5 seconds before fading out
+        }
+    });
+</script>
 {% endblock content %}

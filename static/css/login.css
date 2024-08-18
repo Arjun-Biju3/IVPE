@@ -1,0 +1,125 @@
+
+.register
+{
+  position: absolute;
+  top: 35%;
+  left: 40%;
+  border: 1px solid black;
+  border-radius: 10px;
+  width: 250px;
+  height: 300px;
+  overflow: hidden;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+}
+.in
+{
+    padding-top: 45px;
+    padding-left: 40px;
+}
+.in input
+{
+    height: 30px;
+    width: 200px;
+    position: absolute;
+    left: 9%;
+}
+.register button
+{
+    position: absolute;
+    left: 30%;
+    top: 80%;
+    border: none;
+    border-radius: 15px;
+    background-color: black;
+    width: 100px;
+    height: 30px;
+}
+.register button:hover
+{
+    transform: scale(1.01);
+
+}
+.color
+{
+    background-color: black;
+    width: 250px;
+    height: 80px;
+    overflow: hidden;
+}
+.reg
+{
+    color: rgb(255, 255, 255);
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    padding: 70px;
+    position: absolute;
+    top: -13%;
+    left: 7%;
+}
+.register1
+{
+  position: absolute;
+  top: 40%;
+  left: 40%;
+  border: 1px solid black;
+  border-radius: 10px;
+  width: 250px;
+  height: 250px;
+  overflow: hidden;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+}
+.in1
+{
+    padding-top: 45px;
+    padding-left: 40px;
+}
+.in1 input
+{
+    height: 30px;
+    width: 200px;
+    position: absolute;
+    left: 9%;
+}
+.register1 .button
+{
+    position: absolute;
+    left: 7%;
+    top: 75%;
+    border: none;
+    border-radius: 15px;
+    background-color: black;
+    width: 100px;
+    height: 30px;
+}
+.register1 .button:hover
+{
+    transform: scale(1.01);
+
+}
+.color
+{
+    background-color: black;
+    width: 250px;
+    height: 80px;
+    overflow: hidden;
+}
+.reg
+{
+    color: rgb(255, 255, 255);
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    padding: 70px;
+    position: absolute;
+    top: -13%;
+    left: 7%;
+}
+#bt1
+{
+    position: absolute;
+    left: 53%;
+    top: 75%;
+    border: none;
+    border-radius: 15px;
+    background-color: black;
+    width: 100px;
+    height: 30px;
+}
+
