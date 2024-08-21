@@ -56,3 +56,24 @@ text-decoration: none;
 color: black;
 }
 
+.image-background {
+  width: 1250px; 
+  height: 800px; 
+  background-image: url('{% static "images/background.jpg" %}');
+  padding-top: 180px;
+  background-size: cover; 
+  background-position: center; 
+  background-repeat: no-repeat; 
+  }  
+  footer {
+      text-align: center;
+      padding: 10px;
+      background-color:black;
+      color: white;
+      margin-top: 20px;
+      position: absolute;
+      top: 200%;
+      width: 98.4%;
+      overflow: hidden;
+      
+  }     

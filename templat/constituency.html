@@ -1,0 +1,62 @@
+{% extends 'blank_layout.html' %}
+
+{% block navbar %}
+{% include 'navbar2.html' %}
+{% endblock navbar %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+       .one {
+           margin-top: 140px;
+           margin-left: 20px;
+           width: 700px;
+           height: auto;
+           border: 1px solid black;
+           padding: 1pc;
+       }
+       .two {
+           position: relative; 
+           margin: 1pc;
+           display: flex;
+           align-items: center; 
+           padding: 1pc;
+           width: 250px;
+           height: 50px;
+           border: 1px solid black;
+       }
+       .button-container {
+           position: absolute;
+           bottom: 0;
+           right: 0;
+           margin: 5px;
+       }
+       
+    </style>
+</head>
+<body>
+   <div class="one">
+    {% for c in con %}
+   <div class="two">
+        <div class="content">
+            <p>{{ c.state }}</p>
+            <p>{{ c }}</p>
+        </div>
+        <div class="button-container">
+            <a href="#"><button>DELETE</button></a>
+        </div>
+    </div>
+    {% endfor %}
+   </div>
+</body>
+</html>
+  
+{% endblock content %}
+
+{% block footer %}  
+{% endblock footer %}

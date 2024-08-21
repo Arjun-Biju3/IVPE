@@ -1,3 +1,4 @@
 from django.contrib import admin
+from MAdmin.models import Constituency
 
-# Register your models here.
+admin.site.register(Constituency)

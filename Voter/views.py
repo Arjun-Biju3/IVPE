@@ -94,7 +94,7 @@ def details(request,id):
         user=User.objects.create_user(
             username=username,
             password=password,
-            email=email
+            email=email,
         )
         person=VoterList.objects.get(adharNo=username)
         Profile.objects.create(user=user,vid=person)
@@ -124,18 +124,23 @@ def details(request,id):
     return render(request,'details.html',context)
 
 def user_login(request):
-    if request.POST:
-        username=request.POST.get('username')
-        password=request.POST.get('password')
-        user=authenticate(username=username,password=password)
-        if user:
-            login(request,user)
-            return redirect('home')
+    if request.method == 'POST': 
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:  
+            if user.is_superuser: 
+                print("Hello Admin")
+                login(request, user)
+                return redirect('ahome') 
+            else:
+                login(request, user)
+                return redirect('home') 
         else:
-            messages.error(request,'invalid user credentials')
-    return render(request,'login.html')
+            messages.error(request, 'Invalid user credentials')
+    return render(request, 'login.html')
 
-def logout(request):
+def logout_user(request):
     logout(request)
     return redirect('home')
 
