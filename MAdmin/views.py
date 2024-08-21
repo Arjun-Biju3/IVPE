@@ -17,3 +17,8 @@ def constituency(r):
     con=Constituency.objects.all()
     context={'con':con}
     return render(r,'constituency.html',context)
+
+def delete_constituency(request,pk):
+    data=Constituency.objects.get(pk=pk)
+    data.delete()
+    return redirect('constituency')
