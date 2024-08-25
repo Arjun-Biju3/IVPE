@@ -1,4 +1,14 @@
-
+body{
+    background-color: #f4f4f4;
+}
+.block
+{
+background-color: white;
+}
+.add
+{
+background-color: white;
+}
 .container {
     margin-top: 140px;
     margin-left: 20px;
@@ -19,6 +29,7 @@
     align-items: center;
     border-radius: 10px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.1);
+    background-color: white;
 
 }
 .block:hover {

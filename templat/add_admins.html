@@ -4,7 +4,119 @@
 {% endblock navbar %}
 {% block content %}
   <br><br><br><br>
-  <h1>add admins</h1>
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>CWadmin Form</title>
+      <style>
+         body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+         }
+
+         .main {
+            background-color: #ffffff;
+            border: 1px solid #dcdcdc;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin:  30px;
+            padding: 30px;
+            width: 400px;
+            max-width: 90%;
+         }
+
+         h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+         }
+
+         label {
+            font-weight: bold;
+            color: #555;
+         }
+
+         input[type="text"],
+         input[type="email"],
+         input[type="file"],
+         select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+         }
+
+         input[type="text"]:focus,
+         input[type="email"]:focus,
+         input[type="file"]:focus,
+         select:focus {
+            border-color: black;
+            outline: none;
+         }
+
+         button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+         }
+
+         button:hover {
+          background-color: #45a049;
+         }
+      </style>
+  </head>
+  <body>
+      <div class="main">
+        <h2>Create CWadmin Profile</h2>
+        <form action="" method="POST" enctype="multipart/form-data">
+          {% csrf_token %}
+          
+          <label for="fname">First Name:</label>
+          <input type="text" id="fname" name="fname" maxlength="30" required>
+          
+          <label for="lname">Last Name:</label>
+          <input type="text" id="lname" name="lname" maxlength="30" required>
+          
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email" maxlength="50" required>
+          
+          <label for="phone">Phone:</label>
+          <input type="text" id="phone" name="phone" maxlength="10" required>
+
+          <label for="State">State:</label>
+          <input type="text" id="state" name="state" maxlength="10" required>
+  
+          <label for="constituency">Constituency:</label>
+          <select id="constituency" name="constituency" required>
+              {% for constituency in constituencies %}
+                  <option value="{{ constituency.id }}">{{ constituency.name }}</option>
+              {% endfor %}
+          </select>
+  
+          <label for="image">Profile Image:</label>
+          <input type="file" id="image" name="image" accept="image/*">
+  
+          <button type="submit">Submit</button>
+        </form>
+      </div>
+  </body>
+  </html>
+  
 {% endblock content %}
 {% block footer %}  
 {% endblock footer %}

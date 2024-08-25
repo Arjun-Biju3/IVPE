@@ -1,3 +1,4 @@
 from django.contrib import admin
+from CWAdmin.models import CWadmin
 
-# Register your models here.
+admin.site.register(CWadmin)
