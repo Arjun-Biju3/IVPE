@@ -130,9 +130,11 @@ def user_login(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:  
             if user.is_superuser: 
-                print("Hello Admin")
                 login(request, user)
                 return redirect('ahome') 
+            elif user.is_staff:
+                login(request,user)
+                return redirect('cwhome')
             else:
                 login(request, user)
                 return redirect('home') 

@@ -1,3 +1,4 @@
 from django.shortcuts import render
 
-# Create your views here.
+def cwadminHome(request):
+    return render(request,'index3.html')
