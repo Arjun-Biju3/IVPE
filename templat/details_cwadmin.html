@@ -161,6 +161,17 @@
             width:60px;
             height: 60px;
          }
+         #update
+         {
+            width: 300px;
+         }
+         #delete
+         {
+            background-color: red;
+            width: 300px;
+            position: absolute;
+            left: 50%;
+         }
       </style>
   </head>
   <body>
@@ -181,11 +192,11 @@
           <div class="form-group">
             <div>
               <label for="fname">First Name:</label>
-              <input type="text" id="fname" name="fname" maxlength="30" required>
+              <input type="text" id="fname" name="fname" value="{{ c.fname }}" maxlength="30" required>
             </div>
             <div>
               <label for="lname">Last Name:</label>
-              <input type="text" id="lname" name="lname" maxlength="30" required>
+              <input type="text" id="lname" value="{{ c.lname }}" name="lname" maxlength="30" required>
             </div>
           </div>
          
@@ -194,64 +205,43 @@
              
           <div>
             <label for="adno">Aadhar No:</label>
-            <input type="text" id="adno" name="adno" maxlength="12" required>
+            <input type="text" id="adno" value="{{ c.adharno }}" name="adno" maxlength="12" required>
           </div>
             <div>
               <label for="state">State:</label>
-              <input type="text" id="state" name="state" maxlength="20" required>
+              <input type="text" id="state" value="{{ c.state }}" name="state" maxlength="20" required>
             </div>
           </div>
   
           <div class="form-group">
             <div>
                <label for="constituency">Constituency:</label>
-               <select id="constituency" name="constituency" required>
-                   {% for constituency in constituencies %}
-                       <option value="{{ constituency.id }}">{{ constituency.name }}</option>
-                   {% endfor %}
-               </select>
+               <input type="text" value="{{ c.constituency }}" readonly>
              </div>
              <div>
                 <label for="email">Email:</label>
-                <input type="email" id="email" name="email" maxlength="50" required>
+                <input type="email" id="email" value="{{ c.email }}" name="email" maxlength="50" required>
               </div>
           </div>
           
           <div class="form-group">
             <div>
                <label for="phone">Phone:</label>
-               <input type="text" id="phone" name="phone" maxlength="10" required>
+               <input type="text" id="phone" value="{{ c.phone }}" name="phone" maxlength="10" required>
              </div>
      
              <div>
-               <label for="image">Profile Image:</label>
-               <input type="file" id="image" name="image" accept="image/*">
+                <label for="image">Profile Image:</label>
+                <input type="file" id="image" name="image" accept="image/*">
              </div>
           </div>
-  <br><br>
-          <button type="submit">Submit</button>
+  <br>
+          <button id="update" name="update" type="submit">UPDATE</button>
+          <button id="delete" name="delete" type="submit">DELETE</button>
         </form>
       </div>
 
-      <div class="container">
-       {% for chunk in admin|chunks:1 %}
-       <div class="row">
-           {% for c in chunk %}
-           <div class="block">
-               <div class="content">
-                  <p>{{ c.fname  }} {{c.lname}}</p>
-                   <p>{{ c.state }}, {{c.constituency}}</p>
-                   
-               </div>
-               <div class="button-container"> 
-                  <a href="{% url 'cwDetails' c.id %}"><img class="pic" src="{{ c.image.url }}" alt="image"> </a>               
-               </div>
-           </div>
-           
-           {% endfor %}
-       </div>
-       {% endfor %}
-   </div>
+   
       <script>
          document.addEventListener('DOMContentLoaded', function() {
              const messageContainer = document.getElementById('message-container');

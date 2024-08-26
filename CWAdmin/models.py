@@ -11,8 +11,10 @@ class CWadmin(models.Model):
     image=models.ImageField(upload_to='media/',null=True)
     state=models.CharField(max_length=50)
     constituency=models.OneToOneField(Constituency,related_name='admin_constituency',on_delete=models.CASCADE)
+    adharno=models.CharField(max_length=20,null=True)
+    cp=models.IntegerField(null=True,default=0)
     
     def __str__(self):
-        return self.email
+        return self.constituency.name
     
     
