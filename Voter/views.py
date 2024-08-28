@@ -133,7 +133,11 @@ def user_login(request):
                 return redirect('ahome') 
             elif user.is_staff:
                 login(request,user)
-                return redirect('cwhome')
+                if user.staff_profile.cp==0:
+                    return redirect('change_password')
+                else:
+                    login(request,user)
+                    return redirect('cwhome')
             else:
                 login(request, user)
                 return redirect('home') 

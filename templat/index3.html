@@ -1,5 +1,7 @@
 {% extends 'blank_layout.html' %}
 {% block navbar %}
+{% if user.is_authenticated %}
     {% include 'navbar3.html' %}
+{% endif %}
 {% endblock navbar %}
 
