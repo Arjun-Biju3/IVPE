@@ -17,4 +17,29 @@ class CWadmin(models.Model):
     def __str__(self):
         return self.constituency.name
     
+class Candidate(models.Model):
+    #personal details
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    age = models.IntegerField()
+    phone=models.CharField(max_length=12)
+    email=models.CharField(max_length=30)
+    adharNo=models.CharField(max_length=12,null=False)
+    hname=models.CharField(max_length=100)
+    pincode=models.CharField(max_length=10)
+    state=models.CharField(max_length=30)
+    district=models.CharField(max_length=30)
+    constituency=models.CharField(max_length=30,null=True)
+    taluk=models.CharField(max_length=30)
+    village=models.CharField(max_length=30)
+    #participation information
+    p_constituency = models.ForeignKey(Constituency,related_name='ca_co',on_delete=models.CASCADE)
+    p_state=models.CharField(max_length=30)
+    p_District=models.CharField(max_length=30)
+    profile_image = models.ImageField(upload_to='media/candidates/')
+    symbol=models.ImageField(upload_to='media/symbol/')
+    part_afiliation=models.CharField(max_length=20)
+    
+    
+    
     

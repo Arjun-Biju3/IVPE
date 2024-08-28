@@ -38,7 +38,6 @@ def otp_page(request):
         otp=request.POST.get('otp')
         res=validate_otp(request,otp)
         if res==1:
-            print("validated")
             clear_otp(request)
             adhar=request.session.get('adhar')
             return redirect('details',id=adhar)

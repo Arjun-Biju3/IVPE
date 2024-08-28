@@ -5,9 +5,9 @@
     <ul>
         <li><a href="{% url 'cwhome' %}">HOME</a></li>
         <li><a href="">CANDIDATES</a></li>
-        <li><a href="">ADD CANDIDATES</a></li>
+        <li><a href="{% url 'add_candidates' %}">ADD CANDIDATES</a></li>
         <li><a href="">RESULT</a></li>
-        <li><a href="">CHANGE PASSWORD</a></li>
+        <li><a href="{% url 'change_password' %}">CHANGE PASSWORD</a></li>
         {% if  user.is_authenticated %}
         <li><a href="logout">LOGOUT</a></li>
         {% endif %}

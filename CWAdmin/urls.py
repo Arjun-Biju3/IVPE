@@ -2,5 +2,7 @@ from django.urls import path
 from .import views
 
 urlpatterns = [
-    path('cwhome',views.cwadminHome,name='cwhome')
+    path('cwhome',views.cwadminHome,name='cwhome'),
+    path('AddCandiadte',views.add_candidates,name='add_candidates'),
+    path('changePassword',views.change_password,name='change_password')
 ]

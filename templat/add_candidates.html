@@ -1,0 +1,169 @@
+{% extends 'blank_layout.html' %}
+{% block navbar %}
+{% include 'navbar3.html' %}
+{% endblock navbar %}
+{% block content %}
+ <br><br><br><br>
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidate Registration Form</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif; /* Change this to any font you prefer */
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        form {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            font-family: 'Verdana', sans-serif; /* Font for the form */
+        }
+        h2 {
+            font-family: Arial, Helvetica, sans-serif; /* Font for the form heading */
+            text-align: center;
+            color: #333;
+            margin-top: 0; /* Removed top margin to align with form */
+            margin-bottom: 20px; /* Space below heading */
+        }
+        fieldset {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        legend {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #555;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        input[type="file"],
+        select,
+        textarea {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        button {
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            width: 200px;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <h2>CANDIDATE REGISTRATION FORM</h2>
+        
+        <!-- Personal Details -->
+        <fieldset>
+            <legend><h4>PERSONAL DETAILS</h4></legend>
+            <label for="first_name">First Name:</label>
+            <input type="text" id="first_name" name="first_name" maxlength="100" required>
+
+            <label for="last_name">Last Name:</label>
+            <input type="text" id="last_name" name="last_name" maxlength="100" required>
+
+            <label for="age">Age:</label>
+            <input type="number" id="age" name="age" required>
+
+            <label for="phone">Phone:</label>
+            <input type="text" id="phone" name="phone" maxlength="12" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" maxlength="30" required>
+
+            <label for="adharNo">Aadhar Number:</label>
+            <input type="text" id="adharNo" name="adharNo" maxlength="12" required>
+
+            <label for="hname">House Name:</label>
+            <input type="text" id="hname" name="hname" maxlength="100" required>
+
+            <label for="state">State:</label>
+            <input type="text" id="state" name="state" maxlength="30" required>
+
+            <label for="district">District:</label>
+            <input type="text" id="district" name="district" maxlength="30" required>
+
+            <label for="constituency">Constituency:</label>
+            <input type="text" id="constituency" name="constituency" maxlength="30">
+
+            <label for="taluk">Taluk:</label>
+            <input type="text" id="taluk" name="taluk" maxlength="30" required>
+
+            <label for="village">Village:</label>
+            <input type="text" id="village" name="village" maxlength="30" required>
+
+            <label for="pincode">Pincode:</label>
+            <input type="text" id="pincode" name="pincode" maxlength="10" required>
+        </fieldset>
+
+        <!-- Participation Information -->
+        <fieldset>
+            <legend><h4>PARTICIPATION INFORMATION</h4></legend>
+            <label for="p_state">Present State:</label>
+            <input type="text" id="p_state" name="p_state" maxlength="30" required>
+
+            <label for="p_District">Present District:</label>
+            <input type="text" id="p_District" name="p_District" maxlength="30" required>
+
+            <label for="p_constituency">Present Constituency:</label>
+            <select id="p_constituency" name="p_constituency" required>
+                <!-- Add options dynamically with Django -->
+                {% for constituency in constituencies %}
+                <option value="{{ constituency.id }}">{{ constituency.name }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="part_afiliation">Party Affiliation:</label>
+            <input type="text" id="part_afiliation" name="part_afiliation" maxlength="20" required>
+
+            <label for="profile_image">Profile Image:</label>
+            <input type="file" id="profile_image" name="profile_image">
+
+            <label for="symbol">Symbol Image:</label>
+            <input type="file" id="symbol" name="symbol">
+        </fieldset>
+     
+        <center><button type="submit">Submit</button></center>
+    </form>
+</body>
+</html>
+
+ 
+
+{% endblock content %}
+{% block footer %}  
+{% endblock footer %}
