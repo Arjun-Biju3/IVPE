@@ -1,0 +1,151 @@
+{% extends 'blank_layout.html' %}
+{% block navbar %}
+{% include 'navbar3.html' %}
+{% endblock navbar %}
+{% block content %}
+{% load chunks %}
+{% load static %}
+<br>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            overflow-y: scroll;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            margin-top: 140px;
+            margin-left: 70px;
+            width: 500px;
+        }
+
+        .row {
+            display: flex;
+            gap: 50px; 
+            margin-bottom: 20px; 
+            justify-content: flex-start;
+        }
+
+        .block {
+            flex: 0 0 45%; 
+            padding: 10px;
+            border: 1px solid black;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.1);
+            background-color: white;
+            position: relative;
+        }
+
+        .block:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .image-container {
+            position: relative;
+            width: 200px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .image-container img.profile-image {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: contain; /* Ensures the entire image is shown without cropping */
+        }
+
+        .symbol-container {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            width: 60px; /* Adjust size as needed */
+            height: 60px; /* Adjust size as needed */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background-color: white; /* Background color for better visibility */
+            border: 2px solid #ddd; /* Optional: border to make it stand out */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .symbol-container img.symbol {
+            width: 100%;
+            height: auto;
+            border-radius: 50%;
+        }
+
+        .content {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .content p {
+            margin: 0;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .button-container {
+            margin-top: auto;
+            text-align: center;
+            width: 100%;
+        }
+
+        .button-container button {
+            background-color:  #4CAF50;;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .button-container button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+   <div class="container">
+       {% for chunk in candidates|chunks:3 %}
+       <div class="row">
+           {% for c in chunk %}
+           <div class="block">
+               <div class="image-container">
+                   <img class="profile-image" src="{{ c.profile_image.url }}" alt="Candidate Image">
+                   <div class="symbol-container">
+                       <img class="symbol" src="{{ c.symbol.url }}" alt="Symbol Image">
+                   </div>
+               </div>
+               <div class="content">
+                   <p>{{ c.first_name }} {{ c.last_name }}</p>
+               </div>
+               <div class="button-container">
+                   <a href="{% url 'delete_c' c.id %}">
+                       <button type="button">DETAILS</button>
+                   </a>                  
+               </div>
+           </div>
+           {% endfor %}
+       </div>
+       {% endfor %}
+   </div>
+</body>
+</html>
+  
+{% endblock content %}
+
+{% block footer %}  
+{% endblock footer %}

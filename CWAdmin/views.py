@@ -3,6 +3,7 @@ from django.contrib import messages
 from CWAdmin.otp import *
 import re
 from django.contrib.auth import authenticate,login,logout
+from CWAdmin.models import *
 
 def is_password_secure(password):
     if len(password) < 8:
@@ -23,6 +24,28 @@ def cwadminHome(request):
     return render(request,'index3.html')
 
 def add_candidates(request):
+    if request.method == 'POST':
+        constituency=request.user.staff_profile.constituency
+        Candidate.objects.create(
+            first_name=request.POST.get('first_name'),
+            last_name = request.POST.get('last_name'),
+            age = request.POST.get('age'),
+            phone = request.POST.get('phone'),
+            email = request.POST.get('email'),
+            adharNo = request.POST.get('adharNo'),
+            hname = request.POST.get('hname'),
+            state = request.POST.get('state'),
+            district = request.POST.get('district'),
+            taluk = request.POST.get('taluk'),
+            village = request.POST.get('village'),
+            pincode = request.POST.get('pincode'),
+            p_state=constituency.state,
+            p_constituency=constituency,
+            part_afiliation = request.POST.get('part_afiliation'),
+            profile_image = request.FILES.get('profile_image'),
+            symbol = request.FILES.get('symbol'))
+        messages.success(request,"Candidate added succesfilly")
+        return redirect('add_candidates')
     return render(request,'add_candidates.html')
 
 def change_password(request):
@@ -91,3 +114,8 @@ def validate(request):
         request.session['otp_expires'] = (datetime.now() + timedelta(minutes=5)).isoformat()
         send_email(email,otp)
     return render(request,'validate.html')
+
+def display_candidates(request):
+    candidate=Candidate.objects.filter(p_constituency=request.user.staff_profile.constituency)
+    context={'candidates':candidate}
+    return render(request,'display_candidate.html',context)

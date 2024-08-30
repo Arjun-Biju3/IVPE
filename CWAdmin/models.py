@@ -29,16 +29,19 @@ class Candidate(models.Model):
     pincode=models.CharField(max_length=10)
     state=models.CharField(max_length=30)
     district=models.CharField(max_length=30)
-    constituency=models.CharField(max_length=30,null=True)
     taluk=models.CharField(max_length=30)
     village=models.CharField(max_length=30)
     #participation information
     p_constituency = models.ForeignKey(Constituency,related_name='ca_co',on_delete=models.CASCADE)
     p_state=models.CharField(max_length=30)
-    p_District=models.CharField(max_length=30)
     profile_image = models.ImageField(upload_to='media/candidates/')
     symbol=models.ImageField(upload_to='media/symbol/')
     part_afiliation=models.CharField(max_length=20)
+    
+    def __str__(self):
+        return f"{self.first_name} {self.last_name} {self.p_constituency}"
+
+    
     
     
     

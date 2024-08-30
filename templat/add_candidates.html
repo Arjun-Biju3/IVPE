@@ -3,7 +3,7 @@
 {% include 'navbar3.html' %}
 {% endblock navbar %}
 {% block content %}
- <br><br><br><br>
+ <br><br><br><br><br><br>
  <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,11 +11,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Candidate Registration Form</title>
     <style>
+        .success
+        {
+            position: absolute;
+            top: 20%;
+            left: 38%;
+            width: 280px;
+            background-color: #d4edda; 
+            color: #155724; 
+            border: 1px solid #c3e6cb; 
+            padding: 15px; 
+            border-radius: 5px; 
+            font-family: Arial, sans-serif; 
+            font-size: 14px; 
+            margin: 10px 0; 
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+        }
         body {
             font-family: 'Arial', sans-serif; /* Change this to any font you prefer */
             margin: 0;
             padding: 0;
             background-color: #f4f4f4;
+            
         }
         form {
             max-width: 800px;
@@ -117,9 +134,6 @@
             <label for="district">District:</label>
             <input type="text" id="district" name="district" maxlength="30" required>
 
-            <label for="constituency">Constituency:</label>
-            <input type="text" id="constituency" name="constituency" maxlength="30">
-
             <label for="taluk">Taluk:</label>
             <input type="text" id="taluk" name="taluk" maxlength="30" required>
 
@@ -133,20 +147,6 @@
         <!-- Participation Information -->
         <fieldset>
             <legend><h4>PARTICIPATION INFORMATION</h4></legend>
-            <label for="p_state">Present State:</label>
-            <input type="text" id="p_state" name="p_state" maxlength="30" required>
-
-            <label for="p_District">Present District:</label>
-            <input type="text" id="p_District" name="p_District" maxlength="30" required>
-
-            <label for="p_constituency">Present Constituency:</label>
-            <select id="p_constituency" name="p_constituency" required>
-                <!-- Add options dynamically with Django -->
-                {% for constituency in constituencies %}
-                <option value="{{ constituency.id }}">{{ constituency.name }}</option>
-                {% endfor %}
-            </select>
-
             <label for="part_afiliation">Party Affiliation:</label>
             <input type="text" id="part_afiliation" name="part_afiliation" maxlength="20" required>
 
