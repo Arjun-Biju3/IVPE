@@ -7,8 +7,9 @@ urlpatterns = [
     path('login',views.user_login,name='login'),
     path('logout',views.logout_user,name='logout'),
     path('vote',views.vote,name='vote'),
-    path('candidates',views.candidates,name='candidates'),
     path('help',views.help,name='help'),
-    path('validate',views.otp_page,name='validate'),
-    path('details/<int:id>/',views.details,name='details')
+    path('validate_user_otp',views.otp_page,name='validate_user_otp'),
+    path('details/<int:id>/',views.details,name='details'),
+    path('detailsOfcandidates',views.display_candiadtes,name='det_of_cand'),
+    path('candidate_details/<int:pk>',views.candidate_details,name='candidate_details')
 ]

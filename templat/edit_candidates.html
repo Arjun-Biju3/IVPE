@@ -1,0 +1,178 @@
+{% extends 'blank_layout.html' %}
+{% block navbar %}
+{% include 'navbar3.html' %}
+{% endblock navbar %}
+{% block content %}
+ <br><br><br><br><br><br>
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <style>
+        .success
+        {
+            position: absolute;
+            top: 20%;
+            left: 38%;
+            width: 280px;
+            background-color: #d4edda; 
+            color: #155724; 
+            border: 1px solid #c3e6cb; 
+            padding: 15px; 
+            border-radius: 5px; 
+            font-family: Arial, sans-serif; 
+            font-size: 14px; 
+            margin: 10px 0; 
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+        }
+        body {
+            font-family: 'Arial', sans-serif; /* Change this to any font you prefer */
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            
+        }
+        form {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            font-family: 'Verdana', sans-serif; /* Font for the form */
+        }
+        h2 {
+            font-family: Arial, Helvetica, sans-serif; /* Font for the form heading */
+            text-align: center;
+            color: #333;
+            margin-top: 0; /* Removed top margin to align with form */
+            margin-bottom: 20px; /* Space below heading */
+        }
+        fieldset {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        legend {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #555;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        input[type="file"],
+        select,
+        textarea {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        button {
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            width: 200px;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #delete
+        {
+        background-color:  red;
+        }
+        #delete:hover
+        {
+        background-color:  #e60000;
+        }
+    </style>
+</head>
+<body>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <h2>CANDIDATE DETAILS</h2>
+        
+        <!-- Personal Details -->
+        <fieldset>
+            <legend><h4>PERSONAL DETAILS</h4></legend>
+            <label for="first_name">First Name:</label>
+            <input type="text" id="first_name" value="{{c.first_name}}" name="first_name" maxlength="100" required>
+
+            <label for="last_name">Last Name:</label>
+            <input type="text" id="last_name" value="{{c.last_name}}" name="last_name" maxlength="100" required>
+
+            <label for="age">Age:</label>
+            <input type="number" id="age" value="{{c.age}}" name="age" required>
+
+            <label for="phone">Phone:</label>
+            <input type="text" id="phone" value="{{c.phone}}" name="phone" maxlength="12" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" value="{{c.email}}" name="email" maxlength="30" required>
+
+            <label for="adharNo">Aadhar Number:</label>
+            <input type="text" id="adharNo" name="adharNo" value="{{c.adharNo}}" maxlength="12" required>
+
+            <label for="hname">House Name:</label>
+            <input type="text" id="hname" name="hname" value="{{c.hname}}" maxlength="100" required>
+
+            <label for="state">State:</label>
+            <input type="text" id="state" name="state" value="{{c.state}}" maxlength="30" required>
+
+            <label for="district">District:</label>
+            <input type="text" id="district" name="district" value="{{c.district}}" maxlength="30" required>
+
+            <label for="taluk">Taluk:</label>
+            <input type="text" id="taluk" name="taluk" value="{{c.taluk}}" maxlength="30" required>
+
+            <label for="village">Village:</label>
+            <input type="text" id="village" name="village" value="{{c.village}}" maxlength="30" required>
+
+            <label for="pincode">Pincode:</label>
+            <input type="text" id="pincode" name="pincode" value="{{c.pincode}}" maxlength="10" required>
+        </fieldset>
+
+        <!-- Participation Information -->
+        <fieldset>
+            <legend><h4>PARTICIPATION INFORMATION</h4></legend>
+            <label for="part_afiliation">Party Affiliation:</label>
+            <input type="text" id="part_afiliation" value="{{c.part_afiliation}}" name="part_afiliation" maxlength="20" required>
+
+            <label for="profile_image">Profile Image:</label>
+            <input type="file" id="profile_image" name="profile_image">
+
+            <label for="symbol">Symbol Image:</label>
+            <input type="file" id="symbol" name="symbol">
+        </fieldset>
+     
+       <center> <button name="update" type="submit">UPDATE</button>
+        <button id="delete" name="delete" type="submit" >DELETE</button></center>
+    </form>
+</body>
+</html>
+
+ 
+
+{% endblock content %}
+{% block footer %}  
+{% endblock footer %}

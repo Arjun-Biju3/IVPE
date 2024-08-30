@@ -1,0 +1,98 @@
+{% extends 'blank_layout.html' %}
+{% block content %}
+{% load chunks %}
+{% load static %}
+<!-- candidates.html -->
+<br><br><br><br><br>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ candidate.first_name }} {{ candidate.last_name }} Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .candidate-detail {
+            display: flex;
+            gap: 50px;
+            align-items: flex-start;
+            justify-content: center;
+            margin: 50px auto;
+            max-width: 1000px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .candidate-image-container {
+            text-align: center;
+            margin-right: 20px;
+        }
+        .candidate-image {
+            max-width: 250px;
+            height: auto;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+            margin-bottom: 10px;
+        }
+        .candidate-symbol {
+            max-width: 150px;
+            height: auto;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+        }
+        .candidate-info {
+            max-width: 400px; /* Decreased width for the details section */
+        }
+        .candidate-info h2 {
+            font-size: 2em;
+            margin: 0;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        .candidate-info p {
+            font-size: 1em;
+            margin: 0;
+            margin-bottom: 10px;
+            color: #555;
+        }
+        .candidate-info p strong {
+            font-weight: bold;
+            color: #333;
+        }
+        .address {
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="candidate-detail">
+        <div class="candidate-image-container">
+            <img src="{{ candidate.profile_image.url }}" alt="{{ candidate.first_name }} {{ candidate.last_name }}" class="candidate-image">
+            <img src="{{ candidate.symbol.url }}" alt="Symbol of {{ candidate.first_name }} {{ candidate.last_name }}" class="candidate-symbol">
+        </div>
+        <div class="candidate-info">
+            <h2>{{ candidate.first_name }} {{ candidate.last_name }}</h2>
+            <p><strong>Age:</strong> {{ candidate.age }}</p>
+            <p><strong>Phone:</strong> {{ candidate.phone }}</p>
+            <p><strong>Email:</strong> {{ candidate.email }}</p>
+            <p><strong>Aadhar No:</strong> {{ candidate.adharNo }}</p>
+            <p class="address"><strong>Address:</strong></p>
+            <p>{{ candidate.hname }}, {{ candidate.village }}, {{ candidate.taluk }}, {{ candidate.district }}, {{ candidate.state }} - {{ candidate.pincode }}</p>
+            <p><strong>Constituency:</strong> {{ candidate.p_constituency }}</p>
+            <p><strong>State of Participation:</strong> {{ candidate.p_state }}</p>
+            <p><strong>Party Affiliation:</strong> {{ candidate.part_afiliation }}</p>
+        </div>
+    </div>
+</body>
+</html>
+
+
+
+
+{% endblock content %}

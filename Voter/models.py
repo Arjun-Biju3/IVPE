@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from MAdmin.models import Constituency
 
 class VoterList(models.Model):
     LIVE=1
@@ -19,7 +20,7 @@ class VoterList(models.Model):
     pincode=models.CharField(max_length=10)
     state=models.CharField(max_length=30)
     district=models.CharField(max_length=30)
-    constituency=models.CharField(max_length=30,null=True)
+    Constituency=models.ForeignKey(Constituency,related_name='con_vot',on_delete=models.CASCADE)
     taluk=models.CharField(max_length=30)
     village=models.CharField(max_length=30)
     delete_status=models.IntegerField(choices=DELETE_CHOICES,default=LIVE)

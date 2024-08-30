@@ -4,6 +4,8 @@ from CWAdmin.otp import *
 import re
 from django.contrib.auth import authenticate,login,logout
 from CWAdmin.models import *
+import os
+from django.conf import settings
 
 def is_password_secure(password):
     if len(password) < 8:
@@ -119,3 +121,55 @@ def display_candidates(request):
     candidate=Candidate.objects.filter(p_constituency=request.user.staff_profile.constituency)
     context={'candidates':candidate}
     return render(request,'display_candidate.html',context)
+
+def update_candidates(request,pk):
+    if request.POST and 'update' in request.POST:
+        first_name=request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        age = request.POST.get('age')
+        phone = request.POST.get('phone')
+        email = request.POST.get('email')
+        adharNo = request.POST.get('adharNo')
+        hname = request.POST.get('hname')
+        state = request.POST.get('state')
+        district = request.POST.get('district')
+        taluk = request.POST.get('taluk')
+        village = request.POST.get('village')
+        pincode = request.POST.get('pincode')
+        part_afiliation = request.POST.get('part_afiliation')
+        profile_image = request.FILES.get('profile_image')
+        symbol = request.FILES.get('symbol')
+        can=Candidate.objects.get(id=pk)
+        #update
+        can.first_name=first_name
+        can.last_name=last_name
+        can.age=age
+        can.phone=phone
+        can.email=email
+        can.adharNo=adharNo
+        can.hname=hname
+        can.state=state
+        can.district=district
+        can.taluk=taluk
+        can.village=village
+        can.pincode=pincode
+        can.part_afiliation=part_afiliation
+        if profile_image != None:
+            image_path = os.path.join(settings.MEDIA_ROOT, str(can.profile_image))
+            if os.path.exists(image_path):
+                os.remove(image_path)
+            can.profile_image=profile_image
+        if symbol != None:
+            image_path = os.path.join(settings.MEDIA_ROOT, str(can.symbol))
+            if os.path.exists(image_path):
+                os.remove(image_path)
+            can.symbol=symbol
+        can.save()
+        return redirect('candidates')
+    if request.POST and 'delete' in request.POST:
+        can=Candidate.objects.get(id=pk)
+        can.delete()
+        return redirect('candidates')
+    candidate=Candidate.objects.get(id=pk)
+    context={'c':candidate}
+    return render(request,'edit_candidates.html',context)

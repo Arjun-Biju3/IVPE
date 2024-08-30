@@ -37,6 +37,8 @@ def add_cadmins(request):
                 constituency=constituency,
                 image=image
             )
+            constituency.admin_assigned=1
+            constituency.save()
             send_mail(email, email, password, fname)
             return redirect('cadmins')
         except Constituency.DoesNotExist:

@@ -19,6 +19,8 @@ from django.contrib.auth.models import User
 from Voter.key import *
 from Voter.encrypt import *
 from django.contrib.auth import authenticate,login,logout
+from MAdmin.models import *
+from CWAdmin.models import *
 
 
 #folder to upload captured image
@@ -74,7 +76,7 @@ def register(request):
                 #send mail
                 send_email(email,otp)
                 print(otp)
-                return redirect('validate')
+                return redirect('validate_user_otp')
             else:
                 error_message="You are already registered or you are not eligible"
                 messages.error(request,error_message)
@@ -127,6 +129,32 @@ def user_login(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
+        
+        if user is not None:  
+            if user.is_superuser: 
+                login(request, user)
+                return redirect('ahome') 
+            elif user.is_staff:
+                login(request, user)
+                if hasattr(user, 'staff_profile'):
+                    if user.staff_profile.cp == 0:
+                        return redirect('change_password')
+                    else:
+                        return redirect('cwhome')
+                else:
+                    messages.error(request, 'Staff profile not found.')
+                    return redirect('home')  
+            else:
+                login(request, user)
+                return redirect('home') 
+        else:
+            messages.error(request, 'Invalid user credentials')
+    return render(request, 'login.html')
+
+    if request.method == 'POST': 
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
         if user is not None:  
             if user.is_superuser: 
                 login(request, user)
@@ -149,8 +177,6 @@ def logout_user(request):
     logout(request)
     return redirect('home')
 
-def candidates(request):
-    return render(request,'candidates.html')
 
 def vote(request):
     return render(request,'vote.html')
@@ -158,8 +184,19 @@ def vote(request):
 def help(request):
     return render(request,'help.html')
 
+def display_candiadtes(request):
+    constituency = request.user.user_profile.vid.Constituency
+    can=Candidate.objects.filter(p_constituency=constituency)
+    context={'candidates':can}
+    return render(request,'candidates.html',context)
+
 def decode_image(image_data):
     image_data = image_data.split(',')[1]
     image = Image.open(BytesIO(base64.b64decode(image_data)))
     image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
     return image
+
+def candidate_details(request,pk):
+    can=Candidate.objects.get(id=pk)
+    context={'candidate':can}
+    return render(request,'candidate_details.html',context)

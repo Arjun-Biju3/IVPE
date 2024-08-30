@@ -5,7 +5,6 @@ class Constituency(models.Model):
     name=models.CharField(max_length=30)
     admin_assigned=models.IntegerField(default=0)
     
-    
     def __str__(self):
         return self.name
     
