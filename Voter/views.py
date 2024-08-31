@@ -21,7 +21,8 @@ from Voter.encrypt import *
 from django.contrib.auth import authenticate,login,logout
 from MAdmin.models import *
 from CWAdmin.models import *
-
+from django.contrib.auth.decorators import login_required
+from Voter.decorators import *
 
 #folder to upload captured image
 db_dir = os.path.join(settings.BASE_DIR, 'db')
@@ -175,15 +176,38 @@ def user_login(request):
 
 def logout_user(request):
     logout(request)
+    request.session.pop('is_authenticated', None)
     return redirect('home')
 
+@login_required(login_url='login')
+def check_password(request):
+    if request.POST:
+        username=request.user.username
+        password=request.POST.get('password')
+        data=LoginKey.objects.get(user=username)
+        salt=data.salt
+        stored_password=data.key
+        a=verify_key(password,salt,stored_password)
+        if a:
+            request.session['is_authenticated'] = True
+            return redirect('vote')
+        else:
+            messages.error(request,"Incorrect Password")
+    return render(request,'check_password.html')
 
+@login_required(login_url='login')
 def vote(request):
-    return render(request,'vote.html')
+    if not request.session.get('is_authenticated'):
+        return redirect('check_password')
+    constituency = request.user.user_profile.vid.Constituency
+    can=Candidate.objects.filter(p_constituency=constituency)
+    context={'candidates':can}
+    return render(request,'vote.html',context)
 
 def help(request):
     return render(request,'help.html')
 
+@login_required(login_url='login')
 def display_candiadtes(request):
     constituency = request.user.user_profile.vid.Constituency
     can=Candidate.objects.filter(p_constituency=constituency)
@@ -196,7 +220,9 @@ def decode_image(image_data):
     image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
     return image
 
+@login_required(login_url='login')
 def candidate_details(request,pk):
     can=Candidate.objects.get(id=pk)
     context={'candidate':can}
     return render(request,'candidate_details.html',context)
+

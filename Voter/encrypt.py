@@ -8,7 +8,8 @@ def hash_key_with_salt(key):
     return hashed_key, salt
 
 def verify_key(key, salt, hashed_key):
-    key_salt = key.encode('utf-8') + salt
+    key_salt = key.encode('utf-8') + salt  # Ensure both are bytes
     computed_hash = hashlib.sha256(key_salt).hexdigest()
     return computed_hash == hashed_key
+
 

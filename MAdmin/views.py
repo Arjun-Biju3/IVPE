@@ -109,3 +109,13 @@ def view_admin(request,pk):
     c=CWadmin.objects.get(id=pk)
     context={'c':c}
     return render(request,'details_cwadmin.html',context)
+
+def display_candidates(request):
+    can=Candidate.objects.all()
+    context={'candidates':can}
+    return render(request,'admin_display_candidates.html',context)
+
+def see_details(request,pk):
+    can=Candidate.objects.get(id=pk)
+    context={'candidate':can}
+    return render(request,'see_details.html',context)

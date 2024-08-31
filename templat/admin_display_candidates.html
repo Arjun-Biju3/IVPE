@@ -1,5 +1,8 @@
 {% extends 'blank_layout.html' %}
 {% block content %}
+{% block navbar %}
+{% include 'navbar2.html' %}
+{% endblock navbar %}
 {% load chunks %}
 {% load static %}
 <br>
@@ -9,7 +12,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="{% static 'css/candidate.css' %}">
+    <link rel="stylesheet" href="{% static 'css/display.css' %}">
 </head>
 <body>
    <div class="container">
@@ -25,9 +28,11 @@
                </div>
                <div class="content">
                    <p>{{ c.first_name }} {{ c.last_name }}</p>
+                   <br>
+                   <p>{{ c.state }} {{ c.p_constituency }}</p>
                </div>
                <div class="button-container">
-                   <a href="{% url 'candidate_details' c.id %}">
+                   <a href="{% url 'see_details' c.id %}">
                        <button type="button">DETAILS</button>
                    </a>                  
                </div>

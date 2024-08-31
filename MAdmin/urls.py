@@ -5,5 +5,7 @@ urlpatterns = [
     path('add_cadmin',views.add_cadmins,name='cadmins'),
     path('constituency',views.constituency,name='constituency'),
     path('delete/<pk>',views.delete_constituency,name='delete_c'),
-    path('cwDetails/<pk>',views.view_admin,name='cwDetails')
+    path('cwDetails/<pk>',views.view_admin,name='cwDetails'),
+    path('display_candidates',views.display_candidates,name='display_candidates'),
+    path('see_details/<pk>',views.see_details,name='see_details')
 ]

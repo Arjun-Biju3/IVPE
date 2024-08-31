@@ -11,5 +11,6 @@ urlpatterns = [
     path('validate_user_otp',views.otp_page,name='validate_user_otp'),
     path('details/<int:id>/',views.details,name='details'),
     path('detailsOfcandidates',views.display_candiadtes,name='det_of_cand'),
-    path('candidate_details/<int:pk>',views.candidate_details,name='candidate_details')
+    path('candidate_details/<int:pk>',views.candidate_details,name='candidate_details'),
+    path('check_password',views.check_password,name='check_password')
 ]

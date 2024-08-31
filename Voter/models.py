@@ -45,8 +45,8 @@ class Profile(models.Model):
     
 class LoginKey(models.Model):
     user=models.CharField(max_length=20)
-    key=models.TextField(max_length=70)
-    salt=models.TextField(max_length=40)
+    key=models.TextField()
+    salt=models.BinaryField()
     
 class VoteKey(models.Model):
     uid=models.CharField(max_length=10)

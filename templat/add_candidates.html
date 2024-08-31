@@ -3,6 +3,7 @@
 {% include 'navbar3.html' %}
 {% endblock navbar %}
 {% block content %}
+{% load static %}
  <br><br><br><br><br><br>
  <!DOCTYPE html>
 <html lang="en">
@@ -10,93 +11,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Candidate Registration Form</title>
-    <style>
-        .success
-        {
-            position: absolute;
-            top: 20%;
-            left: 38%;
-            width: 280px;
-            background-color: #d4edda; 
-            color: #155724; 
-            border: 1px solid #c3e6cb; 
-            padding: 15px; 
-            border-radius: 5px; 
-            font-family: Arial, sans-serif; 
-            font-size: 14px; 
-            margin: 10px 0; 
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
-        }
-        body {
-            font-family: 'Arial', sans-serif; /* Change this to any font you prefer */
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-            
-        }
-        form {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            font-family: 'Verdana', sans-serif; /* Font for the form */
-        }
-        h2 {
-            font-family: Arial, Helvetica, sans-serif; /* Font for the form heading */
-            text-align: center;
-            color: #333;
-            margin-top: 0; /* Removed top margin to align with form */
-            margin-bottom: 20px; /* Space below heading */
-        }
-        fieldset {
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 20px;
-        }
-        legend {
-            font-size: 1.2em;
-            font-weight: bold;
-            color: #555;
-        }
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: #555;
-        }
-        input[type="text"],
-        input[type="email"],
-        input[type="number"],
-        input[type="file"],
-        select,
-        textarea {
-            width: calc(100% - 22px);
-            padding: 10px;
-            margin-bottom: 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        textarea {
-            height: 100px;
-            resize: vertical;
-        }
-        button {
-            background-color: #4CAF50;
-            color: #fff;
-            border: none;
-            width: 200px;
-            padding: 10px 20px;
-            border-radius: 4px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-    </style>
+     <link rel="stylesheet" href="{% static 'css/add_candidate.css' %}">
 </head>
 <body>
     <form method="POST" enctype="multipart/form-data">
