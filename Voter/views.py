@@ -22,7 +22,7 @@ from django.contrib.auth import authenticate,login,logout
 from MAdmin.models import *
 from CWAdmin.models import *
 from django.contrib.auth.decorators import login_required
-from Voter.decorators import *
+
 
 #folder to upload captured image
 db_dir = os.path.join(settings.BASE_DIR, 'db')

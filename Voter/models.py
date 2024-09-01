@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from MAdmin.models import Constituency
+from CWAdmin.models import *
 
 class VoterList(models.Model):
     LIVE=1
@@ -52,5 +53,11 @@ class VoteKey(models.Model):
     uid=models.CharField(max_length=10)
     key=models.TextField()
     
+
+class Votes(models.Model):
+    candidate=models.ForeignKey(Candidate,related_name='candidate_profile',on_delete=models.CASCADE)  
+    vote=models.ForeignKey(VoteKey,on_delete=models.DO_NOTHING)
+    voted_at=models.DateTimeField(auto_now_add=True)
+      
     
     
