@@ -45,36 +45,23 @@ def add_string_with_random_separator(base_string, add_string):
 
 def encrypt_aes(data, key):
     if isinstance(data, str):
-        data = data.encode()  # Convert string data to bytes
-    
+        data = data.encode()  
     iv = os.urandom(16)
     cipher = Cipher(algorithms.AES(key), modes.CBC(iv), backend=default_backend())
     encryptor = cipher.encryptor()
-    
-    # Pad data to be a multiple of 16 bytes
     pad_length = 16 - (len(data) % 16)
     padded_data = data + bytes([pad_length] * pad_length)
-    
     encrypted_data = encryptor.update(padded_data) + encryptor.finalize()
-    
-    # Return IV and encrypted data concatenated
     return iv + encrypted_data
 
 def decrypt_aes(encrypted_data, key):
-    # Extract the IV from the beginning of the encrypted data
     iv = encrypted_data[:16]
     actual_encrypted_data = encrypted_data[16:]
-    
     cipher = Cipher(algorithms.AES(key), modes.CBC(iv), backend=default_backend())
     decryptor = cipher.decryptor()
-    
-    # Decrypt the data
     decrypted_data = decryptor.update(actual_encrypted_data) + decryptor.finalize()
-    
-    # Remove padding
     pad_length = decrypted_data[-1]
     decrypted_data = decrypted_data[:-pad_length]
-    
     return decrypted_data
 
 
