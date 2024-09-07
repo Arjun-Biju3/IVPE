@@ -51,7 +51,11 @@ class LoginKey(models.Model):
     
 class VoteKey(models.Model):
     uid=models.CharField(max_length=10)
-    key=models.TextField()
+    key=models.BinaryField()
+    
+class Key(models.Model):
+    uid=models.CharField(max_length=10)
+    key=models.BinaryField()
     
 
 class Votes(models.Model):

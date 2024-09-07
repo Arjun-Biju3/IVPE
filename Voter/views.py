@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from Voter.models import VoterList,Profile,LoginKey,VoteKey
+from Voter.models import VoterList,Profile,LoginKey,VoteKey,Key
 from Voter.calculations import *
 from Voter.otp import *
 import datetime
@@ -119,8 +119,9 @@ def details(request,id):
         key = os.urandom(16)  # Securely generated key
         Enc_key=encrypt_aes(vkey,key)
         VoteKey.objects.create(uid=uid,key=Enc_key)
+        Key.objects.create(uid=uid,key=key)
         send_log_key(email,log_key)
-        return redirect('home')
+        return redirect('login')
     user=VoterList.objects.get(adharNo=id)
     context={'user':user}
     return render(request,'details.html',context)
@@ -199,6 +200,14 @@ def check_password(request):
 def vote(request):
     if not request.session.get('is_authenticated'):
         return redirect('check_password')
+    #fetching key of user
+    username=request.user.username
+    name=request.user.user_profile.vid.fname
+    uid=generate_log_id(username,name)
+    key=Key.objects.get(uid=uid)
+    vkey=VoteKey.objects.get(uid=uid)
+    print((decrypt_aes(vkey.key,key.key)).decode('utf-8'))
+    #completed fetching
     constituency = request.user.user_profile.vid.Constituency
     can=Candidate.objects.filter(p_constituency=constituency)
     context={'candidates':can}

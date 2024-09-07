@@ -34,6 +34,8 @@ def generate_log_id(param1, param2):
     short_key = str(unique_key)[31:]
     return short_key
 
+
+
 #function to add separator
 def add_string_with_random_separator(base_string, add_string):
     separators = ['!', '#', '$', '%', '^', '&', '*']
