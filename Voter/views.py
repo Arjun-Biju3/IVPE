@@ -186,14 +186,19 @@ def check_password(request):
         username=request.user.username
         password=request.POST.get('password')
         data=LoginKey.objects.get(user=username)
-        salt=data.salt
-        stored_password=data.key
-        a=verify_key(password,salt,stored_password)
-        if a:
-            request.session['is_authenticated'] = True
-            return redirect('vote')
+        if data.validity==1:
+            salt=data.salt
+            stored_password=data.key
+            a=verify_key(password,salt,stored_password)
+            if a:
+                request.session['is_authenticated'] = True
+                data.validity=0
+                data.save()
+                return redirect('vote')
+            else:
+                messages.error(request,"Incorrect Password")
         else:
-            messages.error(request,"Incorrect Password")
+            messages.error(request,"Password expired")
     return render(request,'check_password.html')
 
 @login_required(login_url='login')

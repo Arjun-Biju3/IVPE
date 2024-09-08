@@ -48,10 +48,12 @@ class LoginKey(models.Model):
     user=models.CharField(max_length=20)
     key=models.TextField()
     salt=models.BinaryField()
+    validity=models.IntegerField(default=1)
     
 class VoteKey(models.Model):
     uid=models.CharField(max_length=10)
     key=models.BinaryField()
+    key_validity=models.IntegerField(default=1)
     
 class Key(models.Model):
     uid=models.CharField(max_length=10)
