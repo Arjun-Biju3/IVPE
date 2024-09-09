@@ -9,7 +9,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import base64
 import os
-from PIL import Image
+from PIL import Image,UnidentifiedImageError
 from io import BytesIO
 from django.conf import settings
 import subprocess
@@ -186,6 +186,8 @@ def check_password(request):
         username=request.user.username
         password=request.POST.get('password')
         data=LoginKey.objects.get(user=username)
+        data.validity=1 #used for production .remove before deployment
+        data.save()
         if data.validity==1:
             salt=data.salt
             stored_password=data.key
@@ -240,3 +242,42 @@ def candidate_details(request,pk):
     context={'candidate':can}
     return render(request,'candidate_details.html',context)
 
+
+def cast_vote(request, id):
+    if request.method == 'POST':
+        image_data = request.POST.get('image')
+        if not image_data:
+            messages.error(request, "No image data received")
+            return redirect('vote')
+
+        unknown_img_path = os.path.join(settings.BASE_DIR, '.tmp.jpg')
+
+        try:
+            image_data = image_data.split(',')[1]
+            image = Image.open(BytesIO(base64.b64decode(image_data)))
+            image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
+            cv2.imwrite(unknown_img_path, image)
+
+            # Run face recognition
+            output = subprocess.check_output(['face_recognition', db_dir, unknown_img_path])
+            output = output.decode('utf-8').strip()
+            name = output.split(',')[1] if ',' in output else 'unknown'
+            print(name)
+            
+            
+            if name in ['unknown_person', 'no_persons_found', 'unknown']:
+                print("Authorization failed")
+                messages.error(request,"Authorization failed")
+            else:
+                messages.success(request,"successfully authorised")
+                return redirect('vote')
+
+        except Exception as e:
+            print(f"Error: {e}")
+            messages.error(request,"Error occurred while recognizing the face.")
+
+        finally:
+            if os.path.exists(unknown_img_path):
+                os.remove(unknown_img_path)
+
+    return redirect('vote')

@@ -12,5 +12,6 @@ urlpatterns = [
     path('details/<int:id>/',views.details,name='details'),
     path('detailsOfcandidates',views.display_candiadtes,name='det_of_cand'),
     path('candidate_details/<int:pk>',views.candidate_details,name='candidate_details'),
-    path('check_password',views.check_password,name='check_password')
+    path('check_password',views.check_password,name='check_password'),
+    path('voting/<int:id>',views.cast_vote,name='cast_vote')
 ]
