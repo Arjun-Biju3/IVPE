@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from Voter.models import VoterList,Profile,LoginKey,VoteKey,Key
+from Voter.models import VoterList,Profile,LoginKey,VoteKey,Key,Votes
 from Voter.calculations import *
 from Voter.otp import *
 import datetime
@@ -121,6 +121,7 @@ def details(request,id):
         VoteKey.objects.create(uid=uid,key=Enc_key)
         Key.objects.create(uid=uid,key=key)
         send_log_key(email,log_key)
+        request.session['c']=0
         return redirect('login')
     user=VoterList.objects.get(adharNo=id)
     context={'user':user}
@@ -131,7 +132,7 @@ def user_login(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
-        
+    
         if user is not None:  
             if user.is_superuser: 
                 login(request, user)
@@ -144,14 +145,17 @@ def user_login(request):
                     else:
                         return redirect('cwhome')
                 else:
+                    request.session['c']=1
                     messages.error(request, 'Staff profile not found.')
                     return redirect('home')  
             else:
                 login(request, user)
                 return redirect('home') 
         else:
+            request.session['c']=1
             messages.error(request, 'Invalid user credentials')
-    return render(request, 'login.html')
+    c=request.session.get('c')
+    return render(request, 'login.html',{'c':c})
 
     if request.method == 'POST': 
         username = request.POST.get('username')
@@ -207,14 +211,6 @@ def check_password(request):
 def vote(request):
     if not request.session.get('is_authenticated'):
         return redirect('check_password')
-    #fetching key of user
-    username=request.user.username
-    name=request.user.user_profile.vid.fname
-    uid=generate_log_id(username,name)
-    key=Key.objects.get(uid=uid)
-    vkey=VoteKey.objects.get(uid=uid)
-    print((decrypt_aes(vkey.key,key.key)).decode('utf-8'))
-    #completed fetching
     constituency = request.user.user_profile.vid.Constituency
     can=Candidate.objects.filter(p_constituency=constituency)
     context={'candidates':can}
@@ -246,38 +242,56 @@ def candidate_details(request,pk):
 def cast_vote(request, id):
     if request.method == 'POST':
         image_data = request.POST.get('image')
-        if not image_data:
-            messages.error(request, "No image data received")
-            return redirect('vote')
-
-        unknown_img_path = os.path.join(settings.BASE_DIR, '.tmp.jpg')
-
-        try:
-            image_data = image_data.split(',')[1]
-            image = Image.open(BytesIO(base64.b64decode(image_data)))
-            image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
-            cv2.imwrite(unknown_img_path, image)
-
-            # Run face recognition
-            output = subprocess.check_output(['face_recognition', db_dir, unknown_img_path])
-            output = output.decode('utf-8').strip()
-            name = output.split(',')[1] if ',' in output else 'unknown'
-            print(name)
-            
-            
-            if name in ['unknown_person', 'no_persons_found', 'unknown']:
-                print("Authorization failed")
-                messages.error(request,"Authorization failed")
-            else:
-                messages.success(request,"successfully authorised")
+        #fetching key of user
+        voter=request.user.username
+        username=request.user.username
+        name=request.user.user_profile.vid.fname
+        uid=generate_log_id(username,name)
+        key=Key.objects.get(uid=uid)
+        vkey=VoteKey.objects.get(uid=uid)
+        if vkey.key_validity == 1:
+            vote_key=decrypt_aes(vkey.key,key.key).decode('utf-8')
+            can=Candidate.objects.get(id=id)
+        #completed fetching    
+            if not image_data:
+                messages.error(request, "No image data received")
                 return redirect('vote')
+            
+            unknown_img_path = os.path.join(settings.BASE_DIR, '.tmp.jpg')
 
-        except Exception as e:
-            print(f"Error: {e}")
-            messages.error(request,"Error occurred while recognizing the face.")
+            try:
+                image_data = image_data.split(',')[1]
+                image = Image.open(BytesIO(base64.b64decode(image_data)))
+                image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
+                cv2.imwrite(unknown_img_path, image)
+                
+            # Run face recognition
+                output = subprocess.check_output(['face_recognition', db_dir, unknown_img_path])
+                output = output.decode('utf-8').strip()
+                name = output.split(',')[1] if ',' in output else 'unknown'
+        
+                
+                if name in ['unknown_person', 'no_persons_found', 'unknown']:
+                    print("Authorization failed")
+                    messages.error(request,"Authorization failed")
+                
+                elif name==voter:
+                    messages.success(request,"successfully authorised")
+                    #vote=Votes.objects.create()
+                    return redirect('home')
+                else:
+                    print("hello")
+                    print(name)
+                    messages.error(request,"Authorization failed")
+                    return redirect('vote')
+                
+            except Exception as e:
+                print(f"Error: {e}")
+                messages.error(request,"Error occurred while recognizing the face.")
 
-        finally:
-            if os.path.exists(unknown_img_path):
-                os.remove(unknown_img_path)
-
+            finally:
+                if os.path.exists(unknown_img_path):
+                    os.remove(unknown_img_path)
+        else:
+            messages.error(request,"You are already voted")
     return redirect('vote')

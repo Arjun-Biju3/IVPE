@@ -100,6 +100,7 @@ def validate(request):
             request.user.staff_profile.save()
             logout(request)
             message="Password changed Succesfully.Login to continue"
+            request.session['c']=1
             messages.success(request,message)
             return redirect('login')
         if res==-1:

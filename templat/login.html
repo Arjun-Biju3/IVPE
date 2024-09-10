@@ -19,7 +19,7 @@
         margin: 10px 0; 
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
     }
-  /*  .success
+   .success
     {
         position: absolute;
         top: 20%;
@@ -34,9 +34,10 @@
         font-size: 14px; 
         margin: 10px 0; 
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
-    }*/
+    }
 </style>
 
+{% if c == 1 %}
 <div id="message-container">
     <center>
         {% if messages %}
@@ -46,7 +47,7 @@
         {% endif %}
     </center>
 </div>
-
+{% endif %}
 <div id="div1" class="register">
     <div class="color">
         <span class="reg">LOGIN</span>
