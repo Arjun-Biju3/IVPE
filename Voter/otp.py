@@ -42,6 +42,25 @@ def send_log_key(to,key):
     server.login(user,password)
     server.send_message(msg)
     server.quit()
+    
+def send_status(to):
+    msg=EmailMessage()
+    subject="Voting"
+    body=f"Congratulations you have successfully voted."
+    msg.set_content(body)
+    msg['subject'] = subject
+    msg['to'] = to
+    user="ivpe68030@gmail.com"
+    msg['from']=user
+    password="utba gpfp sfgt lagn"
+     
+    server=smtplib.SMTP("smtp.gmail.com",587)
+    server.starttls()
+    server.login(user,password)
+    server.send_message(msg)
+    server.quit()
+    
+
 
 def validate_otp(request, otp):
     session_otp = request.session.get('otp')

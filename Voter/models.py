@@ -62,7 +62,7 @@ class Key(models.Model):
 
 class Votes(models.Model):
     candidate=models.ForeignKey(Candidate,related_name='candidate_profile',on_delete=models.CASCADE)  
-    vote=models.ForeignKey(VoteKey,on_delete=models.DO_NOTHING)
+    vote=models.TextField()
     voted_at=models.DateTimeField(auto_now_add=True)
       
     

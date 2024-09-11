@@ -246,6 +246,7 @@ def cast_vote(request, id):
         voter=request.user.username
         username=request.user.username
         name=request.user.user_profile.vid.fname
+        email=request.user.user_profile.vid.email
         uid=generate_log_id(username,name)
         key=Key.objects.get(uid=uid)
         vkey=VoteKey.objects.get(uid=uid)
@@ -276,8 +277,10 @@ def cast_vote(request, id):
                     messages.error(request,"Authorization failed")
                 
                 elif name==voter:
-                    messages.success(request,"successfully authorised")
-                    #vote=Votes.objects.create()
+                    vote=Votes.objects.create(candidate=can,vote=vote_key)
+                    vkey.key_validity=0
+                    vkey.save()
+                    send_status(email)
                     return redirect('home')
                 else:
                     print("hello")
