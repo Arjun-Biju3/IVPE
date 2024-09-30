@@ -166,7 +166,12 @@
         }
     });
 </script>
-
+<script type="text/javascript">
+    // Redirect after 3 minutes (3 minutes * 60 seconds * 1000 milliseconds)
+    setTimeout(function(){
+        window.location.href = "{% url 'home' %}";
+    }, 60000); // 3 minutes
+</script>
 </body>
 </html>
 {% endblock content %}

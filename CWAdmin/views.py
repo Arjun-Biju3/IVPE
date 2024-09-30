@@ -6,6 +6,8 @@ from django.contrib.auth import authenticate,login,logout
 from CWAdmin.models import *
 import os
 from django.conf import settings
+from Voter.models import *
+
 
 def is_password_secure(password):
     if len(password) < 8:
@@ -174,3 +176,24 @@ def update_candidates(request,pk):
     candidate=Candidate.objects.get(id=pk)
     context={'c':candidate}
     return render(request,'edit_candidates.html',context)
+
+def result(request):
+    count=0
+    vote_count_dict = {}
+    if request.POST and 'count' in request.POST:
+        constituency=request.user.staff_profile.constituency
+        can=Candidate.objects.filter(p_constituency=constituency)
+        # candidates_with_votes = Candidate.objects.filter(p_constituency=constituency).annotate(total_votes=Count('candidate_profile'))
+        # for candidate in candidates_with_votes:
+        #     print(f"Candidate: {candidate.first_name} {candidate.last_name}, Total Votes: {candidate.total_votes}")
+        for candidate in can:
+            # Count the votes for the candidate
+            vote_count = Votes.objects.filter(candidate=candidate).count()
+            
+            # Store the candidate ID and their vote count in the dictionary
+            vote_count_dict[candidate.id] = vote_count
+            
+            # Optional: Print each candidate's vote count
+            #print(f"Candidate: {candidate.first_name} {candidate.last_name}, Votes: {vote_count}")
+            print(vote_count_dict)
+    return render(request,'result.html')
