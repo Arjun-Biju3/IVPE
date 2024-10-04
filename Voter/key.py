@@ -4,6 +4,7 @@ import random
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.backends import default_backend
 import os
+import re
 
 #function to generate login key
 def generate_log_key(param1, param2):
@@ -41,6 +42,15 @@ def add_string_with_random_separator(base_string, add_string):
     separators = ['!', '#', '$', '%', '^', '&', '*']
     separator = random.choice(separators) 
     return base_string + separator + add_string
+
+
+
+
+def get_left_part(string):
+    separators = ['!', '#', '$', '%', '^', '&', '*']
+    pattern = f"[{re.escape(''.join(separators))}]"
+    result = re.split(pattern, string, maxsplit=1)
+    return result[0]
 
 
 #AES IMPLEMENTATION

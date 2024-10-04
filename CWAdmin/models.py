@@ -42,6 +42,14 @@ class Candidate(models.Model):
         return f"{self.first_name} {self.last_name} {self.p_constituency}"
 
     
+class Control(models.Model):
+    key=models.CharField(max_length=20)
+    counted=models.IntegerField(default=0)
+    
+class Count(models.Model):
+    candidate=models.ForeignKey(Candidate,related_name='candidate_data',on_delete=models.CASCADE)
+    votes=models.IntegerField(default=0)
+    
     
     
     

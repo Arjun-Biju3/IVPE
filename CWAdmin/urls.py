@@ -8,5 +8,7 @@ urlpatterns = [
     path('validate',views.validate,name='validate_otp'),
     path('candidates',views.display_candidates,name='candidates'),
     path('update/<pk>',views.update_candidates,name='update_c'),
-    path('result',views.result,name='result')
+    path('result',views.result,name='result'),
+    path('data_result',views.detailed_result,name='detailed_result')
+    
 ]

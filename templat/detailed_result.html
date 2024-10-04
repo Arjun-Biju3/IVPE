@@ -1,0 +1,108 @@
+{% extends 'blank_layout.html' %}
+
+{% block navbar %}
+{% include 'navbar3.html' %}
+{% endblock navbar %}
+
+{% block content %}
+{% load chunks %}
+{% load static %}
+
+<!-- detailed_result.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detailed Vote Results</title>
+    <style>
+        .bar {
+            width: 50px;
+            display: inline-block;
+            margin-right: 10px;
+            text-align: center;
+            font-size: 14px;
+            transition: height 0.5s;
+            position: relative; /* For positioning vote count */
+        }
+
+        .bar-container {
+            margin-top: 200px;
+            margin-left: 100px;
+            display: flex;
+            align-items: flex-end;
+        }
+
+        .label {
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .vote-count {
+            position: absolute;
+            bottom: 100%; /* Position above the bar */
+            transform: translateX(-50%);
+            left: 50%;
+            margin-bottom: 5px; /* Space between bar and vote count */
+            color: black; /* Set text color to black */
+            font-weight: bold; /* Make text bold */
+        }
+    </style>
+</head>
+<body>
+   
+    <div class="bar-container" id="histogram"></div>
+
+    <script>
+        // Pass Django data to JavaScript
+        const data = {{ data|safe }};
+        
+        // Get the container for the histogram
+        const histogram = document.getElementById('histogram');
+
+        // Determine maximum value for scaling
+        const maxValue = Math.max(...Object.values(data));
+
+        // Function to get a random color
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        // Create bars dynamically
+        for (let candidate in data) {
+            let barHeight = (data[candidate] / maxValue) * 300; // Scale heights relative to the max value
+
+            let bar = document.createElement('div');
+            bar.className = 'bar';
+            bar.style.height = barHeight + 'px';
+            bar.style.backgroundColor = getRandomColor(); // Assign a random color
+
+            // Create and append vote count above the bar
+            let voteCount = document.createElement('div');
+            voteCount.className = 'vote-count';
+            voteCount.innerText = data[candidate]; // Vote count
+            bar.appendChild(voteCount);
+
+            // Create and append label under the bar
+            let label = document.createElement('div');
+            label.className = 'label';
+            label.innerText = candidate; // Candidate name
+            bar.appendChild(label);
+
+            // Add bar to histogram
+            histogram.appendChild(bar);
+        }
+    </script>
+</body>
+</html>
+
+
+{% endblock content %}
+
+{% block footer %}  
+{% endblock footer %}

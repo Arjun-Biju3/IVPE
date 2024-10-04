@@ -190,7 +190,7 @@ def check_password(request):
         username=request.user.username
         password=request.POST.get('password')
         data=LoginKey.objects.get(user=username)
-        data.validity=1 #used for production .remove before deployment
+       # data.validity=1 #used for production .remove before deployment
         data.save()
         if data.validity==1:
             salt=data.salt
