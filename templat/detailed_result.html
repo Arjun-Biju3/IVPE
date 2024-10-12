@@ -181,7 +181,7 @@
                 {% csrf_token %}
                 <div class="button-container">
                     <!-- Publish Result button -->
-                     {% if submission_status.counted == 0 %}
+                     {% if submission_status == 0 %}
                     <button type="submit" name="publish"  id="publishResultBtn">
                         submit Result
                     </button>

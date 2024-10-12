@@ -300,8 +300,11 @@ def cast_vote(request, id):
     return redirect('vote')
 
 def view_result(request):
-    status=Control.objects.get(key='published')
-    if status.counted==1:
+    us=request.user.user_profile.vid
+    cid=us.Constituency.id
+    co=Constituency.objects.get(id=cid)
+    
+    if co.published==1:
         vote_data = Count.objects.all()
         data = {}
         for count in vote_data:

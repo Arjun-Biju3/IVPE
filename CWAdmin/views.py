@@ -181,6 +181,8 @@ def update_candidates(request,pk):
 
 
 def detailed_result(request):
+    c=request.user.staff_profile.constituency
+    co=Constituency.objects.get(id=c.id)
     vote_data = Count.objects.all()
     data = {}
     for count in vote_data:
@@ -208,26 +210,25 @@ def detailed_result(request):
     context['voted_voters']=voted_voters
     
     if request.POST and 'publish' in request.POST:
-        c=Control.objects.get(key='submission_status')
-        c.counted=1
-        c.save()
+        co.submitted=1
+        co.save()
     if request.POST and 'revoke' in request.POST:
-        c=Control.objects.get(key='submission_status')
-        c.counted=0
-        c.save()
-    btn_display=Control.objects.get(key='submission_status')
-    print(btn_display.counted)
+        co.submitted=0
+        co.save()
+    btn_display=co.submitted
     context['submission_status']=btn_display
     return render(request, 'detailed_result.html', context)
 
 
 def result(request):
-    c = Control.objects.get(key="counted")
-    if c.counted == 1:
-        return redirect('detailed_result')
+    c=request.user.staff_profile.constituency
+    co=Constituency.objects.get(id=c.id)
+    if co.counted == 1:
+            return redirect('detailed_result')
     if request.POST and 'count' in request.POST:
         constituency=request.user.staff_profile.constituency
         can=Candidate.objects.filter(p_constituency=constituency)
+        
         
         for candidate in can:
            
@@ -247,10 +248,6 @@ def result(request):
             data.votes = vote_count  
             data.save()
             
-           
-
-            
-            c = Control.objects.get(key="counted")   
-            c.counted=1
-            c.save()
+            co.counted=1
+            co.save()
     return render(request,'result.html')
