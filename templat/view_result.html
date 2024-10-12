@@ -1,7 +1,7 @@
 {% extends 'blank_layout.html' %}
 
 {% block navbar %}
-{% include 'navbar3.html' %}
+{% include 'navbar.html' %}
 {% endblock navbar %}
 
 {% block content %}
@@ -176,24 +176,6 @@
             <!-- Display party affiliation -->
             <p><strong>Party Affiliation:</strong> {{ details.part_afiliation }}</p>
 
-            <!-- Form for buttons -->
-            <form class="button-form" method="POST" action="">
-                {% csrf_token %}
-                <div class="button-container">
-                    <!-- Publish Result button -->
-                     {% if submission_status.counted == 0 %}
-                    <button type="submit" name="publish"  id="publishResultBtn">
-                        submit Result
-                    </button>
-                    {% else %}
-                    <!-- Revoke Result button -->
-                    <button type="submit" name="revoke"  id="revokeResultBtn">
-                        Revoke Result
-                    </button>
-                    {% endif %}
-
-                </div>
-            </form>
         </div>
 
         <!-- Bar chart container -->

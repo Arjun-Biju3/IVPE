@@ -1,3 +1,4 @@
+
 from django.shortcuts import render,redirect
 from django.contrib import messages
 from CWAdmin.otp import *
@@ -183,16 +184,47 @@ def detailed_result(request):
     vote_data = Count.objects.all()
     data = {}
     for count in vote_data:
-        data[count.candidate.first_name+" "+count.candidate.last_name] = count.votes  
+        candidate_name = count.candidate.first_name + " " + count.candidate.last_name
+        data[candidate_name] = {
+            'votes': count.votes,
+            'image': count.candidate.profile_image.url
+        }
     context = {'data': data}
-    print(data)
+
+    max_votes = -1
+    candidate_with_max_votes = None
+    for c in vote_data:
+        if c.votes > max_votes:
+            max_votes = c.votes
+            candidate_with_max_votes = c.candidate
+    
+    if candidate_with_max_votes:
+        details = candidate_with_max_votes
+        context['details'] = details
+        
+    total_voters=VoteKey.objects.count()
+    voted_voters=VoteKey.objects.filter(key_validity=0).count()
+    context['total_voters']=total_voters
+    context['voted_voters']=voted_voters
+    
+    if request.POST and 'publish' in request.POST:
+        c=Control.objects.get(key='submission_status')
+        c.counted=1
+        c.save()
+    if request.POST and 'revoke' in request.POST:
+        c=Control.objects.get(key='submission_status')
+        c.counted=0
+        c.save()
+    btn_display=Control.objects.get(key='submission_status')
+    print(btn_display.counted)
+    context['submission_status']=btn_display
     return render(request, 'detailed_result.html', context)
+
 
 def result(request):
     c = Control.objects.get(key="counted")
     if c.counted == 1:
         return redirect('detailed_result')
-    #vote_count_dict = {}
     if request.POST and 'count' in request.POST:
         constituency=request.user.staff_profile.constituency
         can=Candidate.objects.filter(p_constituency=constituency)
@@ -215,13 +247,11 @@ def result(request):
             data.votes = vote_count  
             data.save()
             
-            #remove 
-            # vote_count_dict[candidate.id] = vote_count
-            # print(f"Candidate: {candidate.first_name} {candidate.last_name}, Votes: {vote_count}")
-            # print(vote_count_dict)
+            # data, created = Test_Count.objects.get_or_create(candidate=candidate)
+            # data.votes = vote_count  
+            # data.save()
+
             
-            
-            #uncomment in production
             c = Control.objects.get(key="counted")   
             c.counted=1
             c.save()

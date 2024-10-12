@@ -190,8 +190,8 @@ def check_password(request):
         username=request.user.username
         password=request.POST.get('password')
         data=LoginKey.objects.get(user=username)
-       # data.validity=1 #used for production .remove before deployment
-        data.save()
+        # data.validity=1 #used for production .remove before deployment
+        # data.save()
         if data.validity==1:
             salt=data.salt
             stored_password=data.key
@@ -298,3 +298,35 @@ def cast_vote(request, id):
         else:
             messages.error(request,"You are already voted")
     return redirect('vote')
+
+def view_result(request):
+    status=Control.objects.get(key='published')
+    if status.counted==1:
+        vote_data = Count.objects.all()
+        data = {}
+        for count in vote_data:
+            candidate_name = count.candidate.first_name + " " + count.candidate.last_name
+            data[candidate_name] = {
+                'votes': count.votes,
+                'image': count.candidate.profile_image.url
+            }
+        context = {'data': data}
+
+        max_votes = -1
+        candidate_with_max_votes = None
+        for c in vote_data:
+            if c.votes > max_votes:
+                max_votes = c.votes
+                candidate_with_max_votes = c.candidate
+        
+        if candidate_with_max_votes:
+            details = candidate_with_max_votes
+            context['details'] = details
+            
+        total_voters=VoteKey.objects.count()
+        voted_voters=VoteKey.objects.filter(key_validity=0).count()
+        context['total_voters']=total_voters
+        context['voted_voters']=voted_voters
+        return render(request, 'view_result.html', context)
+    else:
+        return render(request,'not_found.html')

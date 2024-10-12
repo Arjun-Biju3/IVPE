@@ -1,3 +1,4 @@
+
 from django.urls import path
 from . import views
 
@@ -13,5 +14,6 @@ urlpatterns = [
     path('detailsOfcandidates',views.display_candiadtes,name='det_of_cand'),
     path('candidate_details/<int:pk>',views.candidate_details,name='candidate_details'),
     path('check_password',views.check_password,name='check_password'),
-    path('voting/<int:id>',views.cast_vote,name='cast_vote')
+    path('voting/<int:id>',views.cast_vote,name='cast_vote'),
+    path('view_result',views.view_result,name='view_result')
 ]
