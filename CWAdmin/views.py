@@ -247,9 +247,7 @@ def result(request):
             data.votes = vote_count  
             data.save()
             
-            # data, created = Test_Count.objects.get_or_create(candidate=candidate)
-            # data.votes = vote_count  
-            # data.save()
+           
 
             
             c = Control.objects.get(key="counted")   
