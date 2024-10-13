@@ -305,7 +305,7 @@ def view_result(request):
     co=Constituency.objects.get(id=cid)
     
     if co.published==1:
-        vote_data = Count.objects.all()
+        vote_data = Count.objects.filter(constituency=co)
         data = {}
         for count in vote_data:
             candidate_name = count.candidate.first_name + " " + count.candidate.last_name

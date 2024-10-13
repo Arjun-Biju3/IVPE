@@ -1,0 +1,306 @@
+{% extends 'blank_layout.html' %}
+
+{% block navbar %}
+{% include 'navbar3.html' %}
+{% endblock navbar %}
+
+{% block content %}
+{% load chunks %}
+{% load static %}
+
+<!-- detailed_result.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detailed Vote Results</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .results-container {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-top: 50px;
+            padding: 20px;
+            gap: 50px;
+        }
+
+        .candidate-details {
+            width: 300px;
+            text-align: left;
+            padding-right: 20px;
+            border-right: 2px solid #ccc;
+        }
+
+        .candidate-details img {
+            border-radius: 50%;
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            margin-bottom: 20px;
+        }
+
+        .candidate-details h2 {
+            margin: 10px 0;
+            font-size: 24px;
+        }
+
+        .candidate-details p {
+            font-size: 18px;
+            margin: 5px 0;
+            color: #555;
+        }
+
+        .button-form {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 20px;
+        }
+
+        .button-container button {
+            padding: 10px 20px;
+            font-size: 18px;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        #publishResultBtn {
+            background-color: #28a745;
+        }
+
+        #revokeResultBtn {
+            background-color: #dc3545;
+        }
+
+        .bar-container {
+            display: flex;
+            align-items: flex-end;
+            gap: 20px;
+        }
+
+        .bar {
+            width: 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .bar img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+
+        .bar-rect {
+            width: 50px;
+            background-color: lightblue;
+            transition: height 0.5s ease-in-out;
+            margin-bottom: 10px;
+        }
+
+        .vote-count {
+            color: black;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .label {
+            margin-top: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .pie-chart-container {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .stats-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .stats-container p {
+            font-size: 18px;
+            margin-top: 10px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .stacked {
+            flex-direction: column;
+        }
+
+        /* Form styling */
+        form {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+        }
+
+        select, button {
+            padding: 8px;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+
+        label {
+            margin-right: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>View Election Results</h1>
+
+    <!-- Constituency Selection -->
+    <form method="POST">
+        {% csrf_token %}
+        <label for="constituency">Select Constituency:</label>
+        <select name="constituency" id="constituency">
+            {% for constituency in constituencies %}
+                <option value="{{ constituency.id }}" {% if selected_constituency and constituency.id == selected_constituency.id %} selected {% endif %}>
+                    {{ constituency.name }}
+                </option>
+            {% endfor %}
+        </select>
+        <button type="submit">View Results</button>
+    </form>
+
+    <!-- Selected Constituency -->
+    {% if selected_constituency %}
+        <h2>Details for {{ selected_constituency.name }}</h2>
+        <p><strong>State:</strong> {{ selected_constituency.state }}</p>
+        
+        <p><strong>Total Voters:</strong> {{ toatl_c_voters }}</p>
+    {% endif %}
+
+    <!-- Display candidate details and voting statistics -->
+    {% if data %}
+    <div class="results-container">
+        <div class="candidate-details">
+            <h2>Candidate with Maximum Votes</h2>
+            <img src="{{ details.profile_image.url }}" alt="{{ details.first_name }} {{ details.last_name }}'s Profile Image">
+            <h2>{{ details.first_name }} {{ details.last_name }}</h2>
+            <p><strong>Party Affiliation:</strong> {{ details.part_afiliation }}</p>
+
+            <form class="button-form" method="POST" action="">
+                {% csrf_token %}
+                <input type="text"  value="{{selected_constituency.id}}" name="cid" hidden>
+                <div class="button-container">
+                    {% if submission_status == 0 %}
+                        <button type="submit" name="publish" id="publishResultBtn">Publish Result</button>
+                    {% else %}
+                        <button type="submit" name="revoke" id="revokeResultBtn">Revoke Result</button>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+
+        <div class="bar-container" id="histogram"></div>
+
+        <div class="stats-container" id="statsContainer">
+            <div class="pie-chart-container">
+                <h2>Voting Statistics</h2>
+                <canvas id="votingPieChart" class="pie-chart"></canvas>
+            </div>
+            <p>Total Voters: {{ total_voters }}</p>
+            <p>Voted Voters: {{ voted_voters }}</p>
+        </div>
+    </div>
+    {% endif %}
+
+    <script>
+        const data = {{ data|safe }};
+        const histogram = document.getElementById('histogram');
+        const maxValue = Math.max(...Object.values(data).map(item => item.votes));
+
+        // Define an array of colors for the bars
+        const barColors = ['#4CAF50', '#FF5733', '#FFC107', '#17A2B8', '#6F42C1', '#E83E8C', '#FD7E14'];
+
+        // Function to shuffle the colors array to get different colors on each refresh
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Shuffle colors for each page refresh
+        const shuffledColors = shuffle(barColors);
+
+        let colorIndex = 0;
+
+        for (let candidate in data) {
+            const candidateData = data[candidate];
+            let barHeight = (candidateData.votes / maxValue) * 300;
+
+            let bar = document.createElement('div');
+            bar.className = 'bar';
+
+            let img = document.createElement('img');
+            img.src = candidateData.image;
+            bar.appendChild(img);
+
+            let voteCount = document.createElement('div');
+            voteCount.className = 'vote-count';
+            voteCount.innerText = candidateData.votes;
+            bar.appendChild(voteCount);
+
+            let barRect = document.createElement('div');
+            barRect.className = 'bar-rect';
+            barRect.style.height = barHeight + 'px';
+            // Assign a shuffled color to each bar
+            barRect.style.backgroundColor = shuffledColors[colorIndex % shuffledColors.length];
+            bar.appendChild(barRect);
+
+            let label = document.createElement('div');
+            label.className = 'label';
+            label.innerText = candidate;
+            bar.appendChild(label);
+
+            histogram.appendChild(bar);
+
+            // Move to the next color for the next bar
+            colorIndex++;
+        }
+
+        const totalVoters = {{ total_voters }};
+        const votedVoters = {{ voted_voters }};
+        const notVotedVoters = totalVoters - votedVoters;
+
+        const ctx = document.getElementById('votingPieChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Voted Voters', 'Not Voted Voters'],
+                datasets: [{
+                    data: [votedVoters, notVotedVoters],
+                    backgroundColor: ['#4CAF50', '#FF5733']
+                }]
+            }
+        });
+    </script>
+
+</body>
+</html>
+
+{% endblock content %}

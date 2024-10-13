@@ -7,5 +7,6 @@ urlpatterns = [
     path('delete/<pk>',views.delete_constituency,name='delete_c'),
     path('cwDetails/<pk>',views.view_admin,name='cwDetails'),
     path('display_candidates',views.display_candidates,name='display_candidates'),
-    path('see_details/<pk>',views.see_details,name='see_details')
+    path('see_details/<pk>',views.see_details,name='see_details'),
+    path('admin_view_result',views.admin_view_result,name='admin_view_result')
 ]

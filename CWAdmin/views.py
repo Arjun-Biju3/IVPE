@@ -183,7 +183,7 @@ def update_candidates(request,pk):
 def detailed_result(request):
     c=request.user.staff_profile.constituency
     co=Constituency.objects.get(id=c.id)
-    vote_data = Count.objects.all()
+    vote_data = Count.objects.filter(constituency=co)
     data = {}
     for count in vote_data:
         candidate_name = count.candidate.first_name + " " + count.candidate.last_name
@@ -245,6 +245,7 @@ def result(request):
                 except VoteKey.DoesNotExist:
                     pass
             data, created = Count.objects.get_or_create(candidate=candidate)
+            data.constituency=co
             data.votes = vote_count  
             data.save()
             

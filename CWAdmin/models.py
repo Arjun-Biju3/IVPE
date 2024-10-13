@@ -47,6 +47,7 @@ class Control(models.Model):
     counted=models.IntegerField(default=0)
     
 class Count(models.Model):
+    constituency=models.ForeignKey(Constituency,related_name='candudate_constituency',on_delete=models.DO_NOTHING,null=True)
     candidate=models.ForeignKey(Candidate,related_name='candidate_data',on_delete=models.CASCADE)
     votes=models.IntegerField(default=0)
     

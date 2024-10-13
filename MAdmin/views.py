@@ -6,6 +6,7 @@ from MAdmin.password import *
 from django.contrib import messages
 import os
 from django.conf import settings
+from Voter.models import *
 
 def admin_home(request):
     return render(request,'index2.html')
@@ -119,3 +120,66 @@ def see_details(request,pk):
     can=Candidate.objects.get(id=pk)
     context={'candidate':can}
     return render(request,'see_details.html',context)
+
+
+def admin_view_result(request):
+    co = Constituency.objects.all()
+    selected_constituency = None
+    vote_data = []
+    
+    if request.method == 'POST':
+        constituency_id = request.POST.get('constituency')
+        if constituency_id:
+            selected_constituency = Constituency.objects.get(id=constituency_id)
+            vote_data = Count.objects.filter(constituency=constituency_id)
+    data = {}
+    for count in vote_data:
+        candidate_name = count.candidate.first_name + " " + count.candidate.last_name
+        data[candidate_name] = {
+            'votes': count.votes,
+            'image': count.candidate.profile_image.url
+        }
+    context = {
+        'constituencies': co,
+        'data': data,
+        'selected_constituency': selected_constituency
+    }
+
+    # Finding the candidate with the maximum votes
+    max_votes = -1
+    candidate_with_max_votes = None
+    for c in vote_data:
+        if c.votes > max_votes:
+            max_votes = c.votes
+            candidate_with_max_votes = c.candidate
+
+    if candidate_with_max_votes:
+        context['details'] = candidate_with_max_votes
+
+    # Voting statistics
+    total_voters = VoteKey.objects.count()
+    voted_voters = VoteKey.objects.filter(key_validity=0).count()
+    toatl_c_voters=VoterList.objects.filter(Constituency=selected_constituency).count()
+    context['total_voters'] = total_voters
+    context['voted_voters'] = voted_voters
+    context['toatl_c_voters']=toatl_c_voters
+    
+    # Submission button state
+    if selected_constituency:
+        btn_display = selected_constituency.published
+        context['submission_status'] = btn_display
+
+    if request.POST and 'publish' in request.POST:
+        id=request.POST.get('cid')
+        print(id)
+        co=Constituency.objects.get(id=id)
+        co.published=1
+        co.save()
+    if request.POST and 'revoke' in request.POST:
+        id=request.POST.get('cid')
+        print(id)
+        co=Constituency.objects.get(id=id)
+        co.published=0
+        co.save()
+
+    return render(request, 'admin_view_result.html', context)
