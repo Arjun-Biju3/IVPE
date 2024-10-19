@@ -1,0 +1,80 @@
+{% extends 'blank_layout.html' %}
+
+{% block navbar %}
+{% include 'navbar2.html' %}
+{% endblock navbar %}
+
+{% block content %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Constituency</title>
+    <link rel="stylesheet" href="{% static 'css/constituency.css' %}">
+    <style>
+        body {
+            background-color: #f4f4f4;
+            
+        }
+        .form-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: auto;
+            margin-top: 100px;
+            margin-bottom: 50px;
+        }
+        .form-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-container input, .form-container textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .form-container button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .form-container button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Add Constituency</h2>
+        <form action="" method="post">
+            {% csrf_token %}
+            <input type="text" name="state" placeholder="State" required>
+            <input type="text" name="name" placeholder="Constituency Name" required>
+            <input type="text" name="district" placeholder="District">
+            <input type="text" name="taluk" placeholder="Taluk/Tehsil">
+            <input type="text" name="village_town" placeholder="Village/Town">
+            <input type="number" name="total_population" placeholder="Total Population" min="0">
+            <input type="number" name="eligible_voters" placeholder="Eligible Voters" min="0">
+            <input type="text" name="urban_rural_ratio" placeholder="Urban/Rural Ratio (e.g. 60:40)">
+            <input type="number" name="geographical_area" step="0.01" placeholder="Geographical Area (sq km)" min="0">
+            <textarea name="boundaries" rows="4" placeholder="Boundaries"></textarea>
+            <input type="number" name="voter_turnout" step="0.01" placeholder="Voter Turnout (%)" min="0" max="100">
+            <button type="submit">Add Constituency</button>
+        </form>
+    </div>
+</body>
+</html>
+{% endblock content %}
+
+{% block footer %}
+{% endblock footer %}

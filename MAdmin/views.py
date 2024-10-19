@@ -7,6 +7,7 @@ from django.contrib import messages
 import os
 from django.conf import settings
 from Voter.models import *
+import pytz
 
 def admin_home(request):
     return render(request,'index2.html')
@@ -57,12 +58,6 @@ def add_cadmins(request):
 
 
 def constituency(r):
-    if r.POST:
-        Constituency.objects.create(
-            state=r.POST.get('state'),
-            name=r.POST.get('con')
-            )
-        return redirect('constituency')
     con=Constituency.objects.all()
     context={'con':con}
     return render(r,'constituency.html',context)
@@ -183,3 +178,57 @@ def admin_view_result(request):
         co.save()
 
     return render(request, 'admin_view_result.html', context)
+ 
+ 
+def add_constituency(request):
+    if request.POST:
+        Constituency.objects.create(
+            state=request.POST.get('state'),
+            name=request.POST.get('name'),
+            district=request.POST.get('district', None),
+            taluk=request.POST.get('taluk', None),
+            village_town=request.POST.get('village_town', None),
+            total_population=request.POST.get('total_population', None),
+            eligible_voters=request.POST.get('eligible_voters', None),
+            urban_rural_ratio=request.POST.get('urban_rural_ratio', None),
+            geographical_area=request.POST.get('geographical_area', None),
+            boundaries=request.POST.get('boundaries', None),
+            voter_turnout=request.POST.get('voter_turnout', None)
+        )
+        return redirect('constituency')    
+    return render(request,'add_constituency.html')
+
+def update_constituency(request, id):
+    constituency = Constituency.objects.get(id=id)
+    
+    if request.method == 'POST':
+        constituency.state = request.POST.get('state')
+        constituency.name = request.POST.get('name')
+        constituency.district = request.POST.get('district', None)
+        constituency.taluk = request.POST.get('taluk', None)
+        constituency.village_town = request.POST.get('village_town', None)
+        constituency.total_population = request.POST.get('total_population', None)
+        constituency.eligible_voters = request.POST.get('eligible_voters', None)
+        constituency.urban_rural_ratio = request.POST.get('urban_rural_ratio', None)
+        constituency.geographical_area = request.POST.get('geographical_area', None)
+        constituency.boundaries = request.POST.get('boundaries', None)
+        constituency.voter_turnout = request.POST.get('voter_turnout', None)
+
+        constituency.save()
+        return redirect('constituency')  
+
+    context = {
+        'constituency': constituency
+    }
+    return render(request, 'update_constituency.html', context)
+
+
+def view_timings(request):
+    if request.method == 'POST':
+        target_time = request.POST.get('target_time')
+        if target_time:
+            time_instance, created = Time.objects.get_or_create(key="start_vote")
+            time_instance.target_time = target_time
+            time_instance.save()  
+            return redirect('view_timings')  
+    return render(request, 'add_times.html')

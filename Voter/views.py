@@ -22,6 +22,8 @@ from django.contrib.auth import authenticate,login,logout
 from MAdmin.models import *
 from CWAdmin.models import *
 from django.contrib.auth.decorators import login_required
+from django.utils import timezone
+import pytz
 
 
 #folder to upload captured image
@@ -184,28 +186,41 @@ def logout_user(request):
     request.session.pop('is_authenticated', None)
     return redirect('home')
 
+
 @login_required(login_url='login')
 def check_password(request):
-    if request.POST:
-        username=request.user.username
-        password=request.POST.get('password')
-        data=LoginKey.objects.get(user=username)
-        # data.validity=1 #used for production .remove before deployment
-        # data.save()
-        if data.validity==1:
-            salt=data.salt
-            stored_password=data.key
-            a=verify_key(password,salt,stored_password)
-            if a:
-                request.session['is_authenticated'] = True
-                data.validity=0
-                data.save()
-                return redirect('vote')
-            else:
-                messages.error(request,"Incorrect Password")
+    try:
+        time_instance = Time.objects.get(key="start_vote")
+        target_datetime = time_instance.target_time.astimezone(pytz.timezone('Asia/Kolkata'))
+        adjusted_target_datetime = target_datetime - timedelta(hours=5, minutes=30)
+        current_datetime = timezone.now().astimezone(pytz.timezone('Asia/Kolkata'))
+
+        if current_datetime >= adjusted_target_datetime:
+            if request.method == 'POST':
+                username = request.user.username
+                password = request.POST.get('password')
+                data = LoginKey.objects.get(user=username)
+
+                if data.validity == 1:
+                    salt = data.salt
+                    stored_password = data.key
+                    a = verify_key(password, salt, stored_password)
+                    if a:
+                        request.session['is_authenticated'] = True
+                        data.validity = 0
+                        data.save()
+                        return redirect('vote')
+                    else:
+                        messages.error(request, "Incorrect Password")
+                else:
+                    messages.error(request, "Password expired")
         else:
-            messages.error(request,"Password expired")
-    return render(request,'check_password.html')
+            messages.error(request, f"You will be able to vote only on  {adjusted_target_datetime.strftime('%d-%m-%y %I:%M %p')}")
+
+    except Time.DoesNotExist:
+        messages.error(request, "Target time for voting has not been set.")
+    
+    return render(request, 'check_password.html')
 
 @login_required(login_url='login')
 def vote(request):

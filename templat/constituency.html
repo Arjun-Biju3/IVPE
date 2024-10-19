@@ -15,22 +15,68 @@
     <title>Document</title>
     <link rel="stylesheet" href="{% static 'css/constituency.css' %}">
     <style>
-        body{
-        background-color: #f4f4f4;
-    }
-   .block
-   {
-    background-color: white;
-   }
-   .add
-   {
-    background-color: white;
-   }
-</style>
+        body {
+            background-color: #f4f4f4;
+        }
+        .block {
+            background-color: white;
+        }
+        .add {
+            background-color: white;
+        }
+        .container {
+            margin-top: 250px;
+            margin-left: 150px;
+        }
+        #add {
+            position: absolute;
+            top: 19%;
+            right: 5%;
+            width: 180px;
+            height: 40px;
+            background-color: #4CAF50;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #add a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        #add:hover {
+            background-color: #45a049;
+        }
+        #add a:hover {
+            text-decoration: underline;
+        }
+        #add a{
+            text-decoration: none;
+        }
+        .button-container
+        {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        #view
+        {
+           background-color: #4CAF50;
+        }
+        #view:hover{
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
+    <div id="add">
+        <a href="{% url 'add_constituency' %}">ADD CONSTITUENCY</a>
+    </div>
+
    <div class="container">
-       {% for chunk in con|chunks:2 %}
+       {% for chunk in con|chunks:3 %}
        <div class="row">
            {% for c in chunk %}
            <div class="block">
@@ -39,32 +85,21 @@
                    <p>{{ c }}</p>
                </div>
                <div class="button-container">
-                <a href="{% url 'delete_c' c.id %}">
-                    <button type="button">DELETE</button>
-                  </a>                  
+                <a href="{% url 'update_constituency' c.id %}">
+                    <button id="view" type="button">VIEW</button>
+                </a>  
+                <a  href="{% url 'delete_c' c.id %}">
+                    <button  type="button">DELETE</button>
+                </a> 
+                                   
                </div>
            </div>
            {% endfor %}
        </div>
        {% endfor %}
    </div>
-
-   <div class="add">
-  <div class="black" >
-    <span style="color: white;">ADD CONSTITUENCY</span>
-  </div>
-   <div class="data">
-    <form action="" method="post">
-        {% csrf_token %}
-    <input type="text" name="state" required placeholder="STATE">
-    <input type="text" name="con" required placeholder="CONSTITUENCY">
-    <button type="submit">ADD</button>
-    </form>
-   </div>
-   </div>
 </body>
 </html>
-  
 {% endblock content %}
 
 {% block footer %}  

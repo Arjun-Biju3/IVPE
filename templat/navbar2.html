@@ -8,6 +8,7 @@
         <li><a href="{% url 'display_candidates' %}">CANDIDATES</a></li>
         <li><a href="{% url 'admin_view_result' %}">RESULT</a></li>
         <li><a href="{% url 'cadmins' %}">CW-ADMINS</a></li>
+        <li><a href="{% url 'view_timings' %}">TIMINGS</a></li>
         {% if  user.is_authenticated %}
         <li><a href="logout">LOGOUT</a></li>
         {% endif %}
