@@ -1,4 +1,3 @@
-
 from django.shortcuts import render,redirect
 from django.contrib import messages
 from CWAdmin.otp import *
@@ -10,6 +9,8 @@ from django.conf import settings
 from Voter.models import *
 from Voter.key import *
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils import timezone
+import pytz
 
 def is_password_secure(password):
     if len(password) < 8:
@@ -223,32 +224,56 @@ def detailed_result(request):
 def result(request):
     c=request.user.staff_profile.constituency
     co=Constituency.objects.get(id=c.id)
+    try:
+        time_instance = Time.objects.get(key="start_count")
+        time_instance_two=Time.objects.get(key="end_count")
+        target_datetime = time_instance.target_time.astimezone(pytz.timezone('Asia/Kolkata'))
+        adjusted_target_datetime = target_datetime - timedelta(hours=5, minutes=30)
+        current_datetime = timezone.now().astimezone(pytz.timezone('Asia/Kolkata'))
+        ending_date_time=time_instance_two.target_time.astimezone(pytz.timezone('Asia/Kolkata'))
+        adjusted_end_time=ending_date_time - timedelta(hours=5,minutes=30)
+        
+        if current_datetime > adjusted_end_time:
+            messages.error(request, "Counting Completed")
+        else:
+            #
+            if current_datetime >= adjusted_target_datetime:
+                if request.POST and 'count' in request.POST:
+                    constituency=request.user.staff_profile.constituency
+                    can=Candidate.objects.filter(p_constituency=constituency)
+                    
+                    
+                    for candidate in can:
+                    
+                        vote_count = 0
+                        v=Votes.objects.filter(candidate=candidate)
+                        for i in v:
+                            id=get_left_part(i.vote) #fetching id of key
+                            try:
+                                v = VoteKey.objects.get(uid=id)
+                                key=Key.objects.get(uid=id)
+                                vote_key=decrypt_aes(v.key,key.key).decode('utf-8')
+                                if vote_key==i.vote:
+                                    vote_count += 1
+                            except VoteKey.DoesNotExist:
+                                pass
+                        data, created = Count.objects.get_or_create(candidate=candidate)
+                        data.constituency=co
+                        data.votes = vote_count  
+                        data.save()
+                        
+                        co.counted=1
+                        co.save()
+            else:
+                messages.error(request, f"You will be able to count only after  {adjusted_target_datetime.strftime('%d-%m-%y %I:%M %p')}")
+            #
+    except Time.DoesNotExist:
+        messages.error(request, "Target time for counting has not been set.")
+   
     if co.counted == 1:
-            return redirect('detailed_result')
-    if request.POST and 'count' in request.POST:
-        constituency=request.user.staff_profile.constituency
-        can=Candidate.objects.filter(p_constituency=constituency)
-        
-        
-        for candidate in can:
-           
-            vote_count = 0
-            v=Votes.objects.filter(candidate=candidate)
-            for i in v:
-                id=get_left_part(i.vote) #fetching id of key
-                try:
-                    v = VoteKey.objects.get(uid=id)
-                    key=Key.objects.get(uid=id)
-                    vote_key=decrypt_aes(v.key,key.key).decode('utf-8')
-                    if vote_key==i.vote:
-                        vote_count += 1
-                except VoteKey.DoesNotExist:
-                    pass
-            data, created = Count.objects.get_or_create(candidate=candidate)
-            data.constituency=co
-            data.votes = vote_count  
-            data.save()
-            
-            co.counted=1
-            co.save()
+        return redirect('detailed_result')
     return render(request,'result.html')
+
+
+
+    

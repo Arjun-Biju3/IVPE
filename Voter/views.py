@@ -191,32 +191,40 @@ def logout_user(request):
 def check_password(request):
     try:
         time_instance = Time.objects.get(key="start_vote")
+        time_instance_two=Time.objects.get(key="end_vote")
         target_datetime = time_instance.target_time.astimezone(pytz.timezone('Asia/Kolkata'))
         adjusted_target_datetime = target_datetime - timedelta(hours=5, minutes=30)
+        ending_date_time=time_instance_two.target_time.astimezone(pytz.timezone('Asia/Kolkata'))
+        adjusted_end_time=ending_date_time - timedelta(hours=5,minutes=30)
         current_datetime = timezone.now().astimezone(pytz.timezone('Asia/Kolkata'))
+        
+        if current_datetime > adjusted_end_time:
+            messages.error(request, "Voting Completed")
 
-        if current_datetime >= adjusted_target_datetime:
-            if request.method == 'POST':
-                username = request.user.username
-                password = request.POST.get('password')
-                data = LoginKey.objects.get(user=username)
-
-                if data.validity == 1:
-                    salt = data.salt
-                    stored_password = data.key
-                    a = verify_key(password, salt, stored_password)
-                    if a:
-                        request.session['is_authenticated'] = True
-                        data.validity = 0
-                        data.save()
-                        return redirect('vote')
-                    else:
-                        messages.error(request, "Incorrect Password")
-                else:
-                    messages.error(request, "Password expired")
         else:
-            messages.error(request, f"You will be able to vote only on  {adjusted_target_datetime.strftime('%d-%m-%y %I:%M %p')}")
+            #
+            if current_datetime >= adjusted_target_datetime:
+                if request.method == 'POST':
+                    username = request.user.username
+                    password = request.POST.get('password')
+                    data = LoginKey.objects.get(user=username)
 
+                    if data.validity == 1:
+                        salt = data.salt
+                        stored_password = data.key
+                        a = verify_key(password, salt, stored_password)
+                        if a:
+                            request.session['is_authenticated'] = True
+                            data.validity = 0
+                            data.save()
+                            return redirect('vote')
+                        else:
+                            messages.error(request, "Incorrect Password")
+                    else:
+                        messages.error(request, "Password expired")
+            else:
+                messages.error(request, f"You will be able to vote only on  {adjusted_target_datetime.strftime('%d-%m-%y %I:%M %p')}")
+            #
     except Time.DoesNotExist:
         messages.error(request, "Target time for voting has not been set.")
     
@@ -314,37 +322,56 @@ def cast_vote(request, id):
             messages.error(request,"You are already voted")
     return redirect('vote')
 
-def view_result(request):
-    us=request.user.user_profile.vid
-    cid=us.Constituency.id
-    co=Constituency.objects.get(id=cid)
-    
-    if co.published==1:
-        vote_data = Count.objects.filter(constituency=co)
-        data = {}
-        for count in vote_data:
-            candidate_name = count.candidate.first_name + " " + count.candidate.last_name
-            data[candidate_name] = {
-                'votes': count.votes,
-                'image': count.candidate.profile_image.url
-            }
-        context = {'data': data}
-
-        max_votes = -1
-        candidate_with_max_votes = None
-        for c in vote_data:
-            if c.votes > max_votes:
-                max_votes = c.votes
-                candidate_with_max_votes = c.candidate
-        
-        if candidate_with_max_votes:
-            details = candidate_with_max_votes
-            context['details'] = details
+def view_result(request): 
+    try:
+        time_instance = Time.objects.get(key="view_result")
+        target_datetime = time_instance.target_time.astimezone(pytz.timezone('Asia/Kolkata'))
+        adjusted_target_datetime = target_datetime - timedelta(hours=5, minutes=30)
+        current_datetime = timezone.now().astimezone(pytz.timezone('Asia/Kolkata'))
+        print(adjusted_target_datetime)
+        #
+        if current_datetime >= adjusted_target_datetime:
+            us=request.user.user_profile.vid
+            cid=us.Constituency.id
+            co=Constituency.objects.get(id=cid)
             
-        total_voters=VoteKey.objects.count()
-        voted_voters=VoteKey.objects.filter(key_validity=0).count()
-        context['total_voters']=total_voters
-        context['voted_voters']=voted_voters
-        return render(request, 'view_result.html', context)
-    else:
-        return render(request,'not_found.html')
+            if co.published==1:
+                vote_data = Count.objects.filter(constituency=co)
+                data = {}
+                for count in vote_data:
+                    candidate_name = count.candidate.first_name + " " + count.candidate.last_name
+                    data[candidate_name] = {
+                        'votes': count.votes,
+                        'image': count.candidate.profile_image.url
+                    }
+                context = {'data': data}
+
+                max_votes = -1
+                candidate_with_max_votes = None
+                for c in vote_data:
+                    if c.votes > max_votes:
+                        max_votes = c.votes
+                        candidate_with_max_votes = c.candidate
+                
+                if candidate_with_max_votes:
+                    details = candidate_with_max_votes
+                    context['details'] = details
+                    
+                total_voters=VoteKey.objects.count()
+                voted_voters=VoteKey.objects.filter(key_validity=0).count()
+                context['total_voters']=total_voters
+                context['voted_voters']=voted_voters
+                return render(request, 'view_result.html', context)
+            else:
+                return render(request,'not_found.html')
+        else:
+            messages.error(request, f"You will be able to view result only on  {adjusted_target_datetime.strftime('%d-%m-%y %I:%M %p')}")
+        #
+    except Time.DoesNotExist:
+        messages.error(request, "Target time for Publicaction has not been set.")
+    return render(request,'not_found.html')
+        
+        
+        
+        
+            

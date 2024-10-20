@@ -7,33 +7,43 @@
 {% block content %}
 {% load static %}
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Set Target DateTime</title>
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}"> <!-- Link to your CSS file -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <style>
         body {
             background-color: #f4f4f4;
             font-family: Arial, sans-serif;
         }
 
+        .row {
+            display: flex; /* Use flexbox to align containers side by side */
+            justify-content: space-around; /* Distribute space evenly */
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+            margin: 20px auto; /* Center row */
+        }
+
         .container {
-            max-width: 500px;
-            margin: auto;
+            max-width: 250px; /* Reduced width */
+            margin: 10px; /* Margin for spacing between containers */
             padding: 20px;
             background-color: white;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            flex: 1; /* Allow containers to grow and shrink */
+            min-width: 200px; /* Minimum width for responsiveness */
             margin-top: 100px;
         }
 
         h1 {
             text-align: center;
             color: #333;
+            font-size: 20px; /* Adjusted font size */
+            margin-bottom: 15px; /* Space below the heading */
         }
 
         form {
@@ -44,13 +54,15 @@
         label {
             margin-bottom: 8px;
             color: #555;
+            font-size: 16px; /* Adjusted font size */
         }
 
         input[type="datetime-local"] {
             padding: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 15px; /* Reduced margin */
             border: 1px solid #ddd;
             border-radius: 5px;
+            font-size: 14px; /* Adjusted font size */
         }
 
         button {
@@ -72,25 +84,82 @@
             color: red;
             margin-top: 10px;
             text-align: center;
+            font-size: 14px; /* Adjusted font size */
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Set Voting Date and Time</h1>
-        <form method="post" action="">
-            {% csrf_token %}
-            <label for="target_time">Target Date and Time:</label>
-            <input type="datetime-local" id="target_time" name="target_time" required>
-            <button type="submit">Set Date and Time</button>
-            {% if error_message %}
-                <div class="error">{{ error_message }}</div>
-            {% endif %}
-        </form>
+    <div class="row">
+        <div class="container">
+            <h1>Start Polling on</h1>
+            <form method="post" action="">
+                {% csrf_token %}
+                <label for="target_time">Target Date and Time:</label>
+                <input type="datetime-local" id="target_time" name="target_time" required>
+                <button name="start-voting" type="submit">Set Date and Time</button>
+                {% if error_message %}
+                    <div class="error">{{ error_message }}</div>
+                {% endif %}
+            </form>
+        </div>
+
+        <div class="container">
+            <h1>End Polling on</h1>
+            <form method="post" action="">
+                {% csrf_token %}
+                <label for="target_time">Target Date and Time:</label>
+                <input type="datetime-local" id="target_time" name="target_time" required>
+                <button name="end-voting" type="submit">Set Date and Time</button>
+                {% if error_message %}
+                    <div class="error">{{ error_message }}</div>
+                {% endif %}
+            </form>
+        </div>
+
+        <div class="container">
+            <h1>Start Counting on</h1>
+            <form method="post" action="">
+                {% csrf_token %}
+                <label for="target_time">Target Date and Time:</label>
+                <input type="datetime-local" id="target_time" name="target_time" required>
+                <button name="start-count" type="submit">Set Date and Time</button>
+                {% if error_message %}
+                    <div class="error">{{ error_message }}</div>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="container">
+            <h1>End Counting on</h1>
+            <form method="post" action="">
+                {% csrf_token %}
+                <label for="target_time">Target Date and Time:</label>
+                <input type="datetime-local" id="target_time" name="target_time" required>
+                <button name="end-count" type="submit">Set Date and Time</button>
+                {% if error_message %}
+                    <div class="error">{{ error_message }}</div>
+                {% endif %}
+            </form>
+        </div>
+
+        <div class="container">
+            <h1>Publish Result on</h1>
+            <form method="post" action="">
+                {% csrf_token %}
+                <label for="target_time">Target Date and Time:</label>
+                <input type="datetime-local" id="target_time" name="target_time" required>
+                <button name="view-result" type="submit">Set Date and Time</button>
+                {% if error_message %}
+                    <div class="error">{{ error_message }}</div>
+                {% endif %}
+            </form>
+        </div>
+        
     </div>
 </body>
 </html>
-
 
 {% endblock content %}
 {% block footer %}

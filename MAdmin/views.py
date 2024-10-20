@@ -224,10 +224,42 @@ def update_constituency(request, id):
 
 
 def view_timings(request):
-    if request.method == 'POST':
+    if request.POST and 'start-voting' in request.POST:
         target_time = request.POST.get('target_time')
         if target_time:
             time_instance, created = Time.objects.get_or_create(key="start_vote")
+            time_instance.target_time = target_time
+            time_instance.save()  
+            return redirect('view_timings')  
+            
+    if request.POST and 'end-voting' in request.POST:
+        target_time = request.POST.get('target_time')
+        if target_time:
+            time_instance, created = Time.objects.get_or_create(key="end_vote")
+            time_instance.target_time = target_time
+            time_instance.save()  
+            return redirect('view_timings')  
+        
+    if request.POST and 'start-count' in request.POST:
+        target_time = request.POST.get('target_time')
+        if target_time:
+            time_instance, created = Time.objects.get_or_create(key="start_count")
+            time_instance.target_time = target_time
+            time_instance.save()  
+            return redirect('view_timings')  
+        
+    if request.POST and 'end-count' in request.POST:
+        target_time = request.POST.get('target_time')
+        if target_time:
+            time_instance, created = Time.objects.get_or_create(key="end_count")
+            time_instance.target_time = target_time
+            time_instance.save()  
+            return redirect('view_timings')  
+        
+    if request.POST and 'view-result' in request.POST:
+        target_time = request.POST.get('target_time')
+        if target_time:
+            time_instance, created = Time.objects.get_or_create(key="view_result")
             time_instance.target_time = target_time
             time_instance.save()  
             return redirect('view_timings')  
